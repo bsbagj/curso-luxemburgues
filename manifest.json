@@ -1,0 +1,33 @@
+{
+  "name": "Lëtzebuergesch — Curso de Shadowing",
+  "short_name": "Luxemburguês",
+  "description": "Curso de luxemburguês com técnica de shadowing — A1 ao C2",
+  "start_url": "./curso_luxemburgues_shadowing.html",
+  "display": "standalone",
+  "background_color": "#003F8A",
+  "theme_color": "#003F8A",
+  "orientation": "portrait-primary",
+  "lang": "pt-BR",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect width='192' height='192' fill='%23003F8A' rx='32'/><text y='130' x='20' font-size='120' font-family='Arial' font-weight='900' fill='white'>L</text><rect x='140' y='20' width='32' height='152' rx='6' fill='%23EF3340'/></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect width='512' height='512' fill='%23003F8A' rx='80'/><text y='360' x='40' font-size='320' font-family='Arial' font-weight='900' fill='white'>L</text><rect x='380' y='50' width='82' height='412' rx='16' fill='%23EF3340'/></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "shortcuts": [
+    {
+      "name": "Módulo A1",
+      "url": "./curso_luxemburgues_shadowing.html",
+      "description": "Abrir nível A1 — Básico"
+    }
+  ]
+}
