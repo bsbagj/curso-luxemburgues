@@ -1,0 +1,1955 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#003F8A">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Lëtzebuergesch">
+<link rel="manifest" href="manifest.json">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<title>Lëtzebuergesch — Shadowing</title>
+<style>
+:root {
+  --azul-en: #00247D; --vermelho-en: #CF142B;
+
+  --azul: #0052B4; --azul-dark: #003580; --azul-light: #4d8dff;
+  --vermelho: #EF3340; --amarelo: #FFB800;
+  --bg: #f3f6fb; --card: #ffffff; --texto: #0f172a;
+  --cinza: #64748b; --sucesso: #22c55e; --borda: #e2e8f0;
+  --a1: #22c55e; --a2: #84cc16; --b1: #3b82f6; --b2: #6366f1;
+  --c1: #a855f7; --c2: #7c3aed;
+  --glass: rgba(255,255,255,0.12);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 14px rgba(0,0,0,0.08);
+  --shadow-lg: 0 10px 30px rgba(0,0,0,0.1);
+  --radius: 16px;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: var(--texto); min-height: 100vh; overflow-x: hidden; -webkit-font-smoothing: antialiased; }
+
+/* HEADER */
+header { background: linear-gradient(135deg, var(--azul-dark), var(--azul), var(--azul-light)); color: white; padding: 14px 20px; display: flex; align-items: center; gap: 14px; box-shadow: 0 4px 20px rgba(0,82,180,0.35); position: sticky; top: 0; z-index: 100; backdrop-filter: blur(10px); }
+.flag-lux { background: linear-gradient(180deg, #EF3340 33%, white 33%, white 66%, #00A3E0 66%); }
+.flag-en { background: linear-gradient(90deg, #CF142B 25%, #00247D 25%, #00247D 75%, #CF142B 75%); }
+.flag { display: flex; flex-direction: column; width: 40px; height: 28px; border-radius: 3px; overflow: hidden; flex-shrink: 0; }
+.flag-r { background: #EF3340; flex: 1; } .flag-w { background: white; flex: 1; } .flag-b { background: #00A3E0; flex: 1; }
+header h1 { font-size: 1.1rem; font-weight: 700; }
+header p { font-size: 0.78rem; opacity: 0.8; }
+.header-right { margin-left: auto; text-align: right; font-size: 0.78rem; opacity: 0.85; }
+.lang-switcher { position: absolute; top: 10px; right: 14px; display: flex; gap: 5px; z-index: 101; }
+.lang-btn { width: 30px; height: 30px; border-radius: 50%; border: 2px solid white; background: rgba(255,255,255,0.2); color: white; cursor: pointer; font-weight: 700; font-size: 0.75rem; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.lang-btn.ativo { background: white; color: var(--azul); }
+.lang-btn:hover { background: rgba(255,255,255,0.3); }
+
+.streak-badge { background: var(--amarelo); color: #333; padding: 3px 8px; border-radius: 10px; font-weight: 700; font-size: 0.75rem; display: inline-block; margin-top: 4px; }
+
+/* TELA INICIAL — SELEÇÃO DE MÓDULO */
+#telaModulos { padding: 20px 16px; max-width: 700px; margin: 0 auto; }
+.titulo-secao { font-size: 1.3rem; font-weight: 700; color: var(--azul); margin-bottom: 6px; }
+.tabela-comparativa { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.82rem; }
+.tabela-comparativa th { background: var(--azul); color: white; padding: 10px 8px; text-align: left; font-weight: 700; }
+.tabela-comparativa td { padding: 8px; border-bottom: 1px solid var(--borda); text-align: center; }
+.tabela-comparativa tr:hover td { background: #f0f4ff; }
+.tabela-comparativa td:first-child { text-align: left; font-weight: 700; color: var(--azul); }
+.check { color: var(--sucesso); font-weight: 700; }
+.cross { color: var(--vermelho); }
+
+.subtitulo-secao { font-size: 0.88rem; color: var(--cinza); margin-bottom: 20px; }
+.grid-modulos { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; }
+@media(min-width:500px){ .grid-modulos { grid-template-columns: repeat(3, 1fr); } }
+.card-modulo { background: white; border-radius: var(--radius); padding: 18px 14px; box-shadow: var(--shadow-sm); cursor: pointer; border: 3px solid transparent; transition: all 0.3s cubic-bezier(.4,0,.2,1); text-align: center; position: relative; overflow: hidden; }
+.card-modulo::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: linear-gradient(90deg, transparent, var(--azul-light), transparent); opacity: 0; transition: opacity 0.3s; }
+.card-modulo:hover { transform: translateY(-4px); box-shadow: var(--shadow-lg); }
+.card-modulo:hover::before { opacity: 1; }
+.modulo-badge { width: 54px; height: 54px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.3rem; font-weight: 900; color: white; margin: 0 auto 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: transform 0.3s; }
+.card-modulo:hover .modulo-badge { transform: scale(1.1) rotate(-3deg); }
+.modulo-nome { font-size: 0.95rem; font-weight: 700; color: var(--texto); margin-bottom: 4px; }
+.modulo-desc { font-size: 0.75rem; color: var(--cinza); line-height: 1.4; }
+.modulo-prog { font-size: 0.72rem; font-weight: 700; margin-top: 8px; }
+.prog-bar-mini { height: 5px; background: #e9ecef; border-radius: 3px; margin-top: 5px; overflow: hidden; }
+.prog-bar-mini-fill { height: 100%; border-radius: 3px; transition: width 0.4s; }
+.modulo-locked { opacity: 0.45; cursor: not-allowed; }
+.modulo-locked::after { content: "🔒"; position: absolute; top: 10px; right: 12px; font-size: 0.85rem; }
+
+/* TELA DO MÓDULO */
+#telaModulo { display: none; padding: 16px; max-width: 900px; margin: 0 auto; }
+.back-btn { display: flex; align-items: center; gap: 8px; color: var(--azul); font-weight: 600; cursor: pointer; margin-bottom: 16px; font-size: 0.9rem; border: none; background: none; padding: 0; }
+.back-btn:hover { opacity: 0.75; }
+.modulo-header { background: white; border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.modulo-header h2 { font-size: 1.25rem; font-weight: 700; }
+.modulo-header p { font-size: 0.85rem; color: var(--cinza); margin-top: 4px; }
+.progress-geral { margin-top: 12px; }
+.progress-label { font-size: 0.8rem; color: var(--cinza); margin-bottom: 4px; }
+.progress-track { background: #e9ecef; border-radius: 6px; height: 10px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 6px; transition: width 0.5s ease; }
+
+/* LISTA DE LIÇÕES */
+.lista-licoes { display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px; }
+.card-licao-lista { background: white; border-radius: 12px; padding: 16px 18px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); cursor: pointer; border: 2px solid transparent; display: flex; align-items: center; gap: 14px; transition: all 0.2s; }
+.card-licao-lista:hover { border-color: var(--azul); background: #f0f4ff; }
+.card-licao-lista.concluida { border-color: var(--sucesso); }
+.licao-num { width: 40px; height: 40px; border-radius: 50%; background: var(--azul); color: white; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 0.9rem; }
+.licao-num.concluida { background: var(--sucesso); }
+.licao-info { flex: 1; }
+.licao-nome { font-weight: 700; font-size: 0.95rem; }
+.licao-meta { font-size: 0.78rem; color: var(--cinza); margin-top: 2px; }
+.licao-check { font-size: 1.2rem; }
+
+/* TELA DA LIÇÃO */
+#telaLicao { display: none; padding: 16px; max-width: 900px; margin: 0 auto; }
+.tabs { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 2px solid var(--borda); }
+.tab { padding: 9px 16px; border: none; background: none; cursor: pointer; font-size: 0.88rem; font-weight: 600; color: var(--cinza); border-bottom: 3px solid transparent; margin-bottom: -2px; transition: all 0.2s; }
+.tab:hover { color: var(--azul); }
+.tab.ativa { color: var(--azul); border-bottom-color: var(--azul); }
+
+.card-pratica { background: white; border-radius: 16px; padding: 22px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 16px; }
+.frase-card { background: linear-gradient(135deg, #eef4ff 0%, #f5f0ff 50%, #f0f8ff 100%); border: 2px solid #c5d5f8; border-radius: var(--radius); padding: 22px 26px; margin-bottom: 14px; text-align: center; cursor: pointer; transition: all 0.3s cubic-bezier(.4,0,.2,1); position: relative; overflow: hidden; }
+.frase-card::after { content: ''; position: absolute; inset: 0; background: radial-gradient(circle at 30% 50%, rgba(77,141,255,0.06), transparent 70%); pointer-events: none; }
+.frase-card:hover { transform: translateY(-3px) scale(1.01); box-shadow: 0 8px 24px rgba(0,82,180,0.12); border-color: var(--azul); }
+.frase-card.tocando { border-color: var(--azul); background: linear-gradient(135deg, #dce8ff, #e8e0ff); animation: pulseFrase 0.8s ease infinite alternate; }
+@keyframes pulseFrase { from { box-shadow: 0 0 0 0 rgba(0,82,180,0.2); } to { box-shadow: 0 0 0 8px rgba(0,82,180,0); } }
+.frase-lux { font-size: 1.45rem; font-weight: 800; color: var(--azul-dark); margin-bottom: 6px; letter-spacing: -0.02em; }
+.frase-ipa { font-size: 0.82rem; color: #666; font-style: italic; margin-bottom: 5px; }
+.frase-pt { font-size: 0.97rem; color: #444; }
+.dica-click { position: absolute; top: 10px; right: 12px; font-size: 0.72rem; color: var(--azul); opacity: 0.65; }
+
+.controles { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; align-items: center; }
+.btn { padding: 10px 18px; border-radius: 10px; border: none; cursor: pointer; font-size: 0.88rem; font-weight: 600; display: flex; align-items: center; gap: 7px; transition: all 0.25s cubic-bezier(.4,0,.2,1); letter-spacing: 0.01em; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn:active:not(:disabled) { transform: scale(0.97); }
+.btn-primary { background: linear-gradient(135deg, var(--azul), var(--azul-light)); color: white; box-shadow: 0 2px 8px rgba(0,82,180,0.25); }
+.btn-primary:hover:not(:disabled) { background: linear-gradient(135deg, var(--azul-dark), var(--azul)); box-shadow: 0 4px 14px rgba(0,82,180,0.35); }
+.btn-danger { background: linear-gradient(135deg, #dc2626, #ef4444); color: white; box-shadow: 0 2px 8px rgba(220,38,38,0.25); }
+.btn-danger:hover:not(:disabled) { box-shadow: 0 4px 14px rgba(220,38,38,0.35); }
+.btn-success { background: linear-gradient(135deg, #16a34a, var(--sucesso)); color: white; box-shadow: 0 2px 8px rgba(34,197,94,0.25); }
+.btn-outline { background: white; color: var(--azul); border: 2px solid var(--azul); }
+.btn-outline:hover:not(:disabled) { background: var(--azul); color: white; box-shadow: 0 4px 12px rgba(0,82,180,0.2); }
+.btn-sm { padding: 7px 12px; font-size: 0.8rem; }
+.btn-purple { background: linear-gradient(135deg, #7c3aed, #a855f7); color: white; box-shadow: 0 2px 8px rgba(124,58,237,0.25); }
+.btn-purple:hover:not(:disabled) { box-shadow: 0 4px 14px rgba(124,58,237,0.35); }
+
+.vel-ctrl { display: flex; align-items: center; gap: 7px; font-size: 0.83rem; color: var(--cinza); }
+.vel-ctrl input { width: 90px; accent-color: var(--azul); }
+
+.status-box { display: flex; align-items: center; gap: 8px; font-size: 0.88rem; padding: 10px 14px; border-radius: 8px; margin-bottom: 12px; min-height: 40px; }
+.status-idle { background: #f8f9fa; color: var(--cinza); border: 1px solid var(--borda); }
+.status-gravando { background: #fff3cd; color: #856404; border: 1px solid #ffc107; }
+.status-ok { background: #d4edda; color: #155724; border: 1px solid #28a745; }
+
+.dot-pulso { width: 9px; height: 9px; border-radius: 50%; background: var(--vermelho); animation: pulso 1s infinite; }
+@keyframes pulso { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:0.4;transform:scale(0.7)} }
+
+.waveform { height: 40px; background: linear-gradient(135deg, #0f172a, #1e293b); border-radius: 12px; overflow: hidden; display: none; align-items: center; justify-content: center; gap: 2px; padding: 4px 10px; margin-bottom: 10px; }
+.waveform.ativo { display: flex; }
+.wave-bar { width: 3px; background: linear-gradient(to top, var(--amarelo), #ff8c00); border-radius: 2px; min-height: 3px; transition: height 0.08s ease; }
+
+.painel-comp { background: #f8f9fa; border: 2px solid var(--borda); border-radius: 12px; padding: 14px 18px; margin-bottom: 14px; display: none; }
+.painel-comp.visivel { display: block; }
+.comp-linha { display: flex; gap: 10px; margin-bottom: 7px; font-size: 0.88rem; }
+.comp-label { font-weight: 700; min-width: 80px; color: var(--cinza); font-size: 0.78rem; }
+.comp-original { color: var(--azul); font-weight: 600; }
+.score-track { background: #e9ecef; border-radius: 6px; height: 14px; overflow: hidden; margin-top: 8px; }
+.score-fill { height: 100%; border-radius: 6px; display: flex; align-items: center; justify-content: flex-end; padding-right: 6px; transition: width 0.6s; }
+.score-txt { font-size: 0.72rem; font-weight: 700; color: white; }
+.palavra-ok { color: var(--sucesso); font-weight: 700; }
+.palavra-err { color: var(--vermelho); font-weight: 700; text-decoration: underline wavy var(--vermelho); }
+
+.lista-frases { display: flex; flex-direction: column; gap: 9px; margin-top: 16px; }
+.item-frase { display: flex; align-items: center; gap: 11px; padding: 12px 14px; background: #f8f9fa; border-radius: 10px; border: 2px solid transparent; cursor: pointer; transition: all 0.2s; }
+.item-frase:hover { border-color: var(--azul); background: #e8f0fe; }
+.item-frase.selecionada { border-color: var(--azul); background: #e8f0fe; }
+.item-frase.concluida { border-color: var(--sucesso); background: #d4edda; }
+.num-frase { width: 26px; height: 26px; border-radius: 50%; background: var(--azul); color: white; font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.item-frase.concluida .num-frase { background: var(--sucesso); }
+.lux-mini { font-weight: 700; font-size: 0.92rem; color: var(--azul); }
+.pt-mini { font-size: 0.79rem; color: var(--cinza); }
+
+/* VOCAB */
+.tabela-vocab { width: 100%; border-collapse: collapse; }
+.tabela-vocab th { background: var(--azul); color: white; padding: 8px 12px; text-align: left; font-size: 0.82rem; }
+.tabela-vocab td { padding: 8px 12px; border-bottom: 1px solid var(--borda); font-size: 0.88rem; }
+.tabela-vocab tr:hover td { background: #f0f4ff; }
+.palavra-lux { font-weight: 700; color: var(--azul); cursor: pointer; }
+.palavra-lux:hover { text-decoration: underline; }
+
+/* GRAMÁTICA */
+.painel-progresso { background: white; border-radius: 14px; padding: 18px 20px; margin-bottom: 16px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+.progresso-stat { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+.stat-card { background: #f8f9fa; border-radius: 8px; padding: 12px; text-align: center; border: 2px solid var(--borda); }
+.stat-valor { font-size: 1.2rem; font-weight: 700; color: var(--azul); }
+.stat-desc { font-size: 0.75rem; color: var(--cinza); margin-top: 4px; }
+
+.regra { background: #f8f9fa; border-left: 4px solid var(--amarelo); padding: 11px 14px; border-radius: 0 8px 8px 0; margin-bottom: 9px; font-size: 0.88rem; line-height: 1.6; }
+.regra strong { color: var(--azul); }
+
+/* GAMIFICAÇÃO / XP */
+.xp-bar-wrap { position: fixed; bottom: 0; left: 0; right: 0; background: rgba(255,255,255,0.92); backdrop-filter: blur(12px); border-top: 1px solid var(--borda); padding: 10px 20px; display: flex; align-items: center; gap: 12px; z-index: 90; }
+.xp-label { font-size: 0.78rem; font-weight: 800; color: var(--azul); white-space: nowrap; }
+.xp-track { flex: 1; background: #e2e8f0; border-radius: 6px; height: 10px; overflow: hidden; }
+.xp-fill { height: 100%; border-radius: 6px; background: linear-gradient(90deg, var(--amarelo), #ff8c00); transition: width 0.5s cubic-bezier(.4,0,.2,1); }
+.xp-num { font-size: 0.78rem; color: var(--cinza); white-space: nowrap; font-weight: 500; }
+
+/* TOAST */
+.toast { position: fixed; bottom: 70px; left: 50%; transform: translateX(-50%) translateY(20px); background: linear-gradient(135deg, #0f172a, #1e293b); color: white; padding: 10px 22px; border-radius: 24px; font-size: 0.85rem; font-weight: 600; opacity: 0; transition: all 0.3s cubic-bezier(.4,0,.2,1); z-index: 200; pointer-events: none; white-space: nowrap; box-shadow: var(--shadow-lg); }
+.toast.visivel { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* CONQUISTAS */
+.conquista-popup { position: fixed; top: 80px; right: 16px; background: white; border-radius: 14px; padding: 14px 18px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); border-left: 5px solid var(--amarelo); display: none; z-index: 300; max-width: 260px; }
+.conquista-popup.visivel { display: block; animation: slideIn 0.4s ease; }
+@keyframes slideIn { from{transform:translateX(300px);opacity:0} to{transform:translateX(0);opacity:1} }
+.conquista-titulo { font-weight: 700; font-size: 0.95rem; }
+.conquista-desc { font-size: 0.8rem; color: var(--cinza); margin-top: 3px; }
+
+/* DASHBOARD */
+.dashboard { background: white; border-radius: var(--radius); padding: 22px; box-shadow: var(--shadow-md); margin-bottom: 20px; }
+.dashboard-title { font-size: 1.1rem; font-weight: 800; color: var(--azul); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+.chart-container { display: flex; align-items: flex-end; gap: 4px; height: 80px; padding: 8px 0; border-bottom: 2px solid var(--borda); margin-bottom: 12px; }
+.chart-bar { flex: 1; background: linear-gradient(to top, var(--azul), var(--azul-light)); border-radius: 4px 4px 0 0; min-height: 2px; transition: height 0.5s cubic-bezier(.4,0,.2,1); position: relative; cursor: pointer; }
+.chart-bar:hover { opacity: 0.8; }
+.chart-bar::after { content: attr(data-label); position: absolute; top: -18px; left: 50%; transform: translateX(-50%); font-size: 0.6rem; color: var(--cinza); white-space: nowrap; display: none; }
+.chart-bar:hover::after { display: block; }
+.chart-labels { display: flex; gap: 4px; }
+.chart-labels span { flex: 1; text-align: center; font-size: 0.6rem; color: var(--cinza); }
+.heatmap { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; margin-top: 10px; }
+.heat-cell { width: 100%; aspect-ratio: 1; border-radius: 3px; background: #e2e8f0; transition: background 0.3s; }
+.heat-cell.l1 { background: #bbf7d0; } .heat-cell.l2 { background: #4ade80; }
+.heat-cell.l3 { background: #16a34a; } .heat-cell.l4 { background: #166534; }
+.heat-days { display: flex; gap: 3px; margin-bottom: 3px; }
+.heat-days span { flex: 1; text-align: center; font-size: 0.55rem; color: var(--cinza); font-weight: 600; }
+.score-breakdown { display: flex; gap: 12px; margin-top: 12px; }
+.score-ring { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; font-weight: 900; position: relative; }
+.score-ring::before { content: ''; position: absolute; inset: 4px; border-radius: 50%; background: white; }
+.score-ring span { position: relative; z-index: 1; }
+
+/* REPAIR MODE */
+.repair-container { margin-top: 12px; padding: 14px; background: #fefce8; border: 2px solid #fde68a; border-radius: 12px; }
+.repair-title { font-size: 0.82rem; font-weight: 700; color: #92400e; margin-bottom: 10px; }
+.repair-words { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.repair-word { padding: 4px 10px; border-radius: 6px; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: all 0.2s; }
+.repair-word.correct { background: #dcfce7; color: #166534; border: 1px solid #86efac; }
+.repair-word.wrong { background: #fee2e2; color: #991b1b; border: 1px solid #fca5a5; text-decoration: line-through; animation: shake 0.4s ease; }
+.repair-word.missing { background: #fef3c7; color: #92400e; border: 1px dashed #f59e0b; }
+@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-4px)} 75%{transform:translateX(4px)} }
+.repair-hint { font-size: 0.78rem; color: #92400e; font-style: italic; }
+
+/* ROLE-PLAY */
+.roleplay-card { background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 2px solid #7dd3fc; border-radius: var(--radius); padding: 22px; margin-bottom: 16px; }
+.roleplay-header { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
+.roleplay-avatar { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+.roleplay-name { font-weight: 700; font-size: 1rem; }
+.roleplay-role { font-size: 0.78rem; color: var(--cinza); }
+.roleplay-bubble { background: white; border-radius: 14px 14px 14px 4px; padding: 14px 18px; margin-bottom: 12px; box-shadow: var(--shadow-sm); position: relative; }
+.roleplay-bubble.user { background: linear-gradient(135deg, var(--azul), var(--azul-light)); color: white; border-radius: 14px 14px 4px 14px; margin-left: 40px; }
+.roleplay-bubble .npc-text { font-size: 1.1rem; font-weight: 600; margin-bottom: 4px; }
+.roleplay-bubble .npc-trad { font-size: 0.82rem; color: #64748b; font-style: italic; }
+.roleplay-bubble.user .npc-trad { color: rgba(255,255,255,0.7); }
+.roleplay-options { display: flex; flex-direction: column; gap: 8px; margin-top: 12px; }
+.roleplay-option { padding: 12px 16px; background: white; border: 2px solid #bae6fd; border-radius: 12px; cursor: pointer; transition: all 0.25s; text-align: left; }
+.roleplay-option:hover { border-color: var(--azul); background: #f0f9ff; transform: translateX(4px); }
+.roleplay-option .opt-lux { font-weight: 700; font-size: 0.95rem; color: var(--azul-dark); }
+.roleplay-option .opt-pt { font-size: 0.78rem; color: var(--cinza); }
+.roleplay-score { text-align: center; padding: 20px; }
+.roleplay-score .big-emoji { font-size: 3rem; margin-bottom: 10px; }
+.roleplay-score .score-text { font-size: 1.5rem; font-weight: 900; color: var(--azul); }
+
+/* AI CHAT */
+.chat-panel { position: fixed; bottom: 60px; right: 20px; width: 380px; max-height: 520px; background: white; border-radius: 18px; box-shadow: 0 8px 40px rgba(0,0,0,0.18); z-index: 500; display: none; flex-direction: column; overflow: hidden; animation: chatIn 0.3s ease; }
+@keyframes chatIn { from{transform:translateY(20px) scale(0.95);opacity:0} to{transform:translateY(0) scale(1);opacity:1} }
+.chat-panel.visible { display: flex; }
+.chat-header { background: linear-gradient(135deg, var(--azul-dark), var(--azul)); color: white; padding: 14px 18px; display: flex; align-items: center; justify-content: space-between; }
+.chat-header h3 { font-size: 0.95rem; font-weight: 700; }
+.chat-close { background: none; border: none; color: rgba(255,255,255,0.8); font-size: 1.2rem; cursor: pointer; padding: 4px 8px; border-radius: 8px; }
+.chat-close:hover { background: rgba(255,255,255,0.15); }
+.chat-messages { flex: 1; overflow-y: auto; padding: 14px; display: flex; flex-direction: column; gap: 10px; max-height: 350px; scroll-behavior: smooth; }
+.chat-msg { max-width: 85%; padding: 10px 14px; border-radius: 14px; font-size: 0.88rem; line-height: 1.4; word-wrap: break-word; }
+.chat-msg.bot { background: #f0f4f8; color: #334155; align-self: flex-start; border-bottom-left-radius: 4px; }
+.chat-msg.user { background: linear-gradient(135deg, var(--azul), var(--azul-light)); color: white; align-self: flex-end; border-bottom-right-radius: 4px; }
+.chat-msg .msg-lux { font-weight: 700; margin-bottom: 3px; }
+.chat-msg .msg-pt { font-size: 0.78rem; color: #64748b; font-style: italic; }
+.chat-msg.user .msg-pt { color: rgba(255,255,255,0.7); }
+.chat-msg .msg-vocab { display: inline-block; background: #e0f2fe; color: var(--azul-dark); padding: 2px 8px; border-radius: 6px; font-size: 0.78rem; font-weight: 600; margin: 2px 0; cursor: pointer; }
+.chat-msg .msg-vocab:hover { background: #bae6fd; }
+.chat-typing { display: flex; gap: 4px; padding: 10px 14px; align-self: flex-start; }
+.chat-typing span { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; animation: typing 1.2s infinite; }
+.chat-typing span:nth-child(2) { animation-delay: 0.2s; }
+.chat-typing span:nth-child(3) { animation-delay: 0.4s; }
+@keyframes typing { 0%,60%,100%{transform:translateY(0)} 30%{transform:translateY(-6px)} }
+.chat-input-bar { display: flex; gap: 8px; padding: 10px 14px; border-top: 1px solid var(--borda); background: #f8fafc; }
+.chat-input { flex: 1; border: 2px solid var(--borda); border-radius: 12px; padding: 8px 14px; font-size: 0.88rem; outline: none; font-family: inherit; resize: none; }
+.chat-input:focus { border-color: var(--azul-light); }
+.chat-send { background: var(--azul); color: white; border: none; border-radius: 12px; padding: 8px 16px; font-size: 0.88rem; font-weight: 700; cursor: pointer; transition: all 0.2s; }
+.chat-send:hover { background: var(--azul-dark); }
+.chat-topics { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 6px; }
+.chat-topic { padding: 8px 10px; background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; font-size: 0.78rem; cursor: pointer; text-align: center; transition: all 0.2s; }
+.chat-topic:hover { background: #e0f2fe; border-color: var(--azul); }
+.chat-fab { position: fixed; bottom: 20px; right: 20px; width: 56px; height: 56px; border-radius: 50%; background: linear-gradient(135deg, var(--azul), var(--azul-light)); color: white; border: none; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 20px rgba(0,82,180,0.35); z-index: 499; transition: all 0.3s; display: flex; align-items: center; justify-content: center; }
+.chat-fab:hover { transform: scale(1.1); box-shadow: 0 6px 28px rgba(0,82,180,0.5); }
+@media(max-width:480px) { .chat-panel { width: calc(100% - 20px); right: 10px; bottom: 50px; max-height: 70vh; } }
+
+/* RESPONSIVO */
+@media(max-width:480px) {
+  .controles { flex-direction: column; align-items: stretch; }
+  .btn { justify-content: center; }
+  .frase-lux { font-size: 1.2rem; }
+  .grid-modulos { grid-template-columns: repeat(2, 1fr); }
+  .score-breakdown { flex-wrap: wrap; }
+}
+
+/* XP padding */
+#telaModulos, #telaModulo, #telaLicao { padding-bottom: 70px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="flag"><div class="flag-r"></div><div class="flag-w"></div><div class="flag-b"></div></div>
+  <div>
+    <h1>Lëtzebuergesch</h1>
+    <p>Curso Completo · A1 ao C2 · Shadowing</p>
+  </div>
+  <div class="header-right">
+    <div id="hdrNivel">—</div>
+    <div class="streak-badge" id="hdrStreak">🔥 0 dias</div>
+  </div>
+  <div class="lang-switcher">
+    <button class="lang-btn ativo" id="btnLux" onclick="mudarIdioma('lux')">🇱🇺</button>
+    <button class="lang-btn" id="btnEn" onclick="mudarIdioma('en')">🇬🇧</button>
+  </div>
+</header>
+
+<!-- TELA INICIAL: SELEÇÃO DE IDIOMA E COMPARATIVA -->
+<div id="telaInicial" style="display:none">
+  <div class="secao-intro">
+    <div class="titulo-secao">Por que este app?</div>
+    <table class="tabela-comparativa">
+      <tr><th>Recurso</th><th>Nossa App</th><th>Duolingo</th><th>Babbel</th></tr>
+      <tr><td>Shadowing Real</td><td class="check">✓</td><td>✗</td><td>✗</td></tr>
+      <tr><td>CEFR Estruturado</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Luxemburguês</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+      <tr><td>IPA Detalhado</td><td class="check">✓</td><td>✗</td><td>✗</td></tr>
+      <tr><td>STT Nativo</td><td class="check">✓</td><td class="check">✓</td><td class="check">✓</td></tr>
+      <tr><td>Gratuito</td><td class="check">✓</td><td class="cross">✗</td><td class="cross">✗</td></tr>
+    </table>
+    <div style="margin-top: 24px; text-align: center;">
+      <p style="font-size: 0.9rem; color: var(--cinza); margin-bottom: 20px;">Escolha seu idioma para começar:</p>
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 20px;">
+        <div style="background: white; border-radius: 14px; padding: 20px; cursor: pointer; border: 3px solid var(--azul); transition: all 0.3s;" onclick="selecionarIdioma('lux')">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🇱🇺</div>
+          <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">Luxemburguês</div>
+          <div style="font-size: 0.8rem; color: var(--cinza);">48+ lições · A1–C2</div>
+        </div>
+        <div style="background: white; border-radius: 14px; padding: 20px; cursor: pointer; border: 3px solid #00247D; transition: all 0.3s;" onclick="selecionarIdioma('en')">
+          <div style="font-size: 2.5rem; margin-bottom: 10px;">🇬🇧</div>
+          <div style="font-weight: 700; font-size: 1.1rem; margin-bottom: 4px;">English</div>
+          <div style="font-size: 0.8rem; color: var(--cinza);">75 lessons · A1–B1</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!-- TELA: LISTA DE MÓDULOS -->
+<div id="telaModulos" style="display:none">
+  <div style="margin-bottom:20px; padding-top:4px;">
+    <div class="titulo-secao">Escolha seu Módulo</div>
+    <div class="subtitulo-secao">6 níveis CEFR · shadowing com áudio · progresso gamificado</div>
+  </div>
+    <div class="painel-progresso">
+    <div style="font-size: 1.1rem; font-weight: 700; color: var(--azul); margin-bottom: 12px;">📊 Seu Progresso</div>
+    <div class="progresso-stat">
+      <div class="stat-card">
+        <div class="stat-valor" id="statTotal">0</div>
+        <div class="stat-desc">Frases Praticadas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-valor" id="statTaxa">0%</div>
+        <div class="stat-desc">Taxa de Acerto Média</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-valor" id="statLicoes">0</div>
+        <div class="stat-desc">Lições Completas</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-valor" id="statStreak">0</div>
+        <div class="stat-desc">Sequência (dias)</div>
+      </div>
+    </div>
+  </div>
+
+  <div style="margin-bottom: 16px; display: flex; gap: 10px; flex-wrap: wrap;">
+    <button class="btn btn-outline" id="btnRevisao" onclick="iniciarRevisao()" style="flex:1; padding: 12px; font-size: 0.95rem;">📝 Revisar frases fracas</button>
+    <button class="btn btn-purple" onclick="abrirRolePlay()" style="flex:1; padding: 12px; font-size: 0.95rem;">🎭 Role-Play</button>
+    <button class="btn btn-primary" onclick="toggleDashboard()" style="flex:1; padding: 12px; font-size: 0.95rem;">📈 Dashboard</button>
+    <button class="btn btn-success" onclick="toggleChat()" style="flex:1; padding: 12px; font-size: 0.95rem;">🤖 Chat AI</button>
+  </div>
+
+  <!-- DASHBOARD -->
+  <div id="dashboardPanel" style="display:none">
+    <div class="dashboard">
+      <div class="dashboard-title">📈 Evolução dos Últimos 14 Dias</div>
+      <div class="chart-container" id="chartBars"></div>
+      <div class="chart-labels" id="chartLabels"></div>
+    </div>
+    <div class="dashboard">
+      <div class="dashboard-title">🗓️ Atividade (últimas 4 semanas)</div>
+      <div class="heat-days"><span>S</span><span>T</span><span>Q</span><span>Q</span><span>S</span><span>S</span><span>D</span></div>
+      <div class="heatmap" id="heatmapGrid"></div>
+    </div>
+    <div class="dashboard">
+      <div class="dashboard-title">🎯 Score Médio por Módulo</div>
+      <div id="moduleScores" style="display:flex; flex-wrap:wrap; gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- ROLE-PLAY -->
+  <div id="roleplayPanel" style="display:none">
+    <div class="dashboard">
+      <div class="dashboard-title">🎭 Cenários de Role-Play</div>
+      <p style="font-size:0.85rem; color:var(--cinza); margin-bottom:16px;">Pratique diálogos interativos em situações reais. Escolha um cenário:</p>
+      <div id="roleplayScenarios" style="display:grid; grid-template-columns:1fr 1fr; gap:10px;"></div>
+    </div>
+  </div>
+
+  <!-- ROLE-PLAY ATIVO -->
+  <div id="roleplayActive" style="display:none">
+    <button class="back-btn" onclick="fecharRolePlay()">← Cenários</button>
+    <div class="dashboard">
+      <div class="dashboard-title" id="rpTitle"></div>
+      <div id="rpDialogue"></div>
+      <div class="roleplay-options" id="rpOptions"></div>
+      <div id="rpScore" style="display:none"></div>
+    </div>
+  </div>
+
+<div class="grid-modulos" id="gridModulos"></div>
+</div>
+
+<!-- TELA: LISTA DE LIÇÕES DO MÓDULO -->
+<div id="telaModulo">
+  <button class="back-btn" onclick="voltarModulos()">← Módulos</button>
+  <div class="modulo-header" id="moduloHeader"></div>
+  <div class="lista-licoes" id="listaLicoes"></div>
+</div>
+
+<!-- TELA: LIÇÃO -->
+<div id="telaLicao">
+  <button class="back-btn" id="backLicao" onclick="voltarModulo()">← Lições</button>
+
+  <div class="tabs">
+    <button class="tab ativa" onclick="mostrarTab('shadowing')">🎯 Shadowing</button>
+    <button class="tab" onclick="mostrarTab('vocabulario')">📚 Vocabulário</button>
+    <button class="tab" onclick="mostrarTab('gramatica')">📖 Gramática</button>
+  </div>
+
+  <!-- TAB SHADOWING -->
+  <div id="tab-shadowing">
+    <div class="card-pratica">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px;gap:10px;">
+        <div>
+          <div style="font-size:1.2rem;font-weight:700;color:var(--azul)" id="licaoTitulo">—</div>
+          <div style="font-size:0.82rem;color:var(--cinza);margin-top:3px" id="licaoSub">—</div>
+        </div>
+        <div id="licaoBadge" style="background:var(--amarelo);color:#333;padding:4px 12px;border-radius:10px;font-size:0.75rem;font-weight:700;white-space:nowrap;flex-shrink:0">—</div>
+      </div>
+
+      <div class="frase-card" id="fraseCard" onclick="falarFraseAtual()">
+        <span class="dica-click">▶ ouvir</span>
+        <div class="frase-lux" id="fraseTexto">—</div>
+        <div class="frase-ipa" id="fraseIPA">—</div>
+        <div class="frase-pt" id="fraseTrad">—</div>
+      </div>
+
+      <div class="controles">
+        <button class="btn btn-primary" onclick="falarFraseAtual()">🔊 Ouvir</button>
+        <button class="btn btn-danger" id="btnGravar" onclick="alternarGravacao()">🎤 Gravar voz</button>
+        <button class="btn btn-outline btn-sm" id="btnLoop" onclick="toggleLoop()">🔁 Loop</button>
+        <button class="btn btn-outline btn-sm" onclick="fraseAnterior()">← Anterior</button>
+        <button class="btn btn-outline btn-sm" onclick="fraseSeguinte()">Próxima →</button>
+        <div class="vel-ctrl">
+          <span>🐢</span>
+          <input type="range" id="velRange" min="0.4" max="1.2" step="0.1" value="0.8" oninput="document.getElementById('velLabel').textContent=this.value+'×'">
+          <span>🐇</span>
+          <span id="velLabel">0.8×</span>
+        </div>
+      </div>
+
+      <div class="status-box status-idle" id="statusBox">
+        <span>💡</span>
+        <span>Ouça a frase depois grave sua voz para praticar shadowing.</span>
+      </div>
+
+      <div id="avisoIdioma" style="background:#fff8e1;border:1px solid #ffe082;border-radius:8px;padding:9px 14px;font-size:0.78rem;color:#795548;margin-bottom:12px">
+        ⚠️ <strong>Reconhecimento de voz:</strong> O luxemburguês não tem suporte em STT comerciais. O app usa modelo <strong>alemão (de-DE)</strong> como aproximação — funciona para a maioria das frases, mas pode falhar em palavras exclusivamente luxemburguesas.
+      </div>
+
+<div class="waveform" id="waveform"></div>
+
+      <div class="painel-comp" id="painelComp">
+        <div style="font-size:0.78rem;font-weight:700;color:var(--cinza);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:10px">📊 Análise de Pronúncia</div>
+        <div class="comp-linha">
+          <span class="comp-label">Original:</span>
+          <span class="comp-original" id="compOriginal">—</span>
+        </div>
+        <div class="comp-linha">
+          <span class="comp-label">Você disse:</span>
+          <span id="compVoce">—</span>
+        </div>
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+          <span style="font-size:0.78rem;color:var(--cinza);font-weight:600">Similaridade</span>
+          <span id="scoreTxt" style="font-size:1.3rem;font-weight:800;color:var(--azul)"></span>
+        </div>
+        <div class="score-track">
+          <div class="score-fill" id="scoreFill" style="width:0%"></div>
+        </div>
+        <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-purple btn-sm" id="btnPlayback" onclick="reproduzirGravacao()" style="display:none">🔊 Ouvir minha voz</button>
+          <button class="btn btn-outline btn-sm" onclick="tentarNovamente()">🔄 Tentar novamente</button>
+          <button class="btn btn-success btn-sm" onclick="marcarConcluida()">✓ Concluída</button>
+        </div>
+      </div>
+
+      <div class="lista-frases" id="listaFrases"></div>
+    </div>
+  </div>
+
+  <!-- TAB VOCABULÁRIO -->
+  <div id="tab-vocabulario" style="display:none">
+    <div class="card-pratica">
+      <h3 style="font-size:1rem;color:var(--azul);margin-bottom:14px">📚 Vocabulário da Lição</h3>
+      <table class="tabela-vocab">
+        <thead><tr><th>Luxemburguês</th><th>Português</th><th>Pronúncia</th><th>🔊</th></tr></thead>
+        <tbody id="tabelaVocab"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- TAB GRAMÁTICA -->
+  <div id="tab-gramatica" style="display:none">
+    <div class="card-pratica">
+      <h3 style="font-size:1rem;color:var(--azul);margin-bottom:14px">📖 Notas de Gramática</h3>
+      <div id="notasGramatica"></div>
+    </div>
+  </div>
+</div>
+
+<!-- XP BAR (sempre visível) -->
+<div class="xp-bar-wrap">
+  <span class="xp-label">⭐ XP</span>
+  <div class="xp-track"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+  <span class="xp-num" id="xpNum">0 / 100</span>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- CONQUISTA POPUP -->
+<div class="conquista-popup" id="conquistaPopup">
+  <div class="conquista-titulo" id="conquistaTitulo">🏆 Conquista!</div>
+  <div class="conquista-desc" id="conquistaDesc"></div>
+</div>
+
+<!-- AI CHAT PANEL -->
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-header">
+    <h3>🤖 Chat em Lëtzebuergesch</h3>
+    <button class="chat-close" onclick="toggleChat()">✕</button>
+  </div>
+  <div class="chat-messages" id="chatMessages"></div>
+  <div class="chat-input-bar">
+    <input class="chat-input" id="chatInput" placeholder="Schreift hei... (escreva aqui)" onkeydown="if(event.key==='Enter')enviarChat()">
+    <button class="chat-send" onclick="enviarChat()">➤</button>
+  </div>
+</div>
+<button class="chat-fab" id="chatFab" onclick="toggleChat()">💬</button>
+<script src="curso_dados.js"></script>
+<script>
+// ================================================================
+// ESTADO DA APLICAÇÃO
+// ================================================================
+// ================================================================
+// SELETOR DE IDIOMA
+// ================================================================
+let idiomaAtual = 'lux';
+
+function selecionarIdioma(idioma) {
+  mudarIdioma(idioma);
+  mostrarTela('telaModulos');
+}
+
+
+function mudarIdioma(idioma) {
+  idiomaAtual = idioma;
+  document.getElementById('btnLux').classList.toggle('ativo', idioma === 'lux');
+  document.getElementById('btnEn').classList.toggle('ativo', idioma === 'en');
+  carregarDados();
+  renderizarModulos();
+  mostrarTela('telaModulos');
+  const avisoEl = document.getElementById('avisoIdioma');
+  if (avisoEl) {
+    avisoEl.style.display = idioma === 'lux' ? 'block' : 'none';
+  }
+}
+
+
+
+let moduloAtual = null;
+let licaoAtual = null;
+let fraseIdx = 0;
+let frasesConcluidas = new Set();
+let gravacaoBlob = null;
+let mediaRecorder = null;
+let recognizer = null;
+let animFrame = null;
+let xp = 0;
+let streak = 0;
+let licoesConcluidas = {}; // { 'A1_0': true, 'B1_2': true, ... }
+let conquistasDesbloqueadas = new Set();
+let loopMode = false;
+let loopTimeout = null;
+
+// Carrega dados do localStorage
+function carregarDados() {
+  try {
+    const chave = idiomaAtual === 'lux' ? 'lux_dados' : 'en_dados';
+    const d = JSON.parse(localStorage.getItem(chave) || '{}');
+    xp = d.xp || 0;
+    streak = d.streak || 0;
+    licoesConcluidas = d.licoesConcluidas || {};
+    conquistasDesbloqueadas = new Set(d.conquistas || []);
+    atualizarStreakDiario(d.ultimoAcesso);
+    d.ultimoAcesso = new Date().toDateString();
+    salvarDados();
+  } catch(e) {}
+}
+
+function salvarDados() {
+  try {
+    const chave = idiomaAtual === 'lux' ? 'lux_dados' : 'en_dados';
+    localStorage.setItem(chave, JSON.stringify({
+      xp, streak, licoesConcluidas,
+      conquistas: [...conquistasDesbloqueadas],
+      ultimoAcesso: new Date().toDateString()
+    }));
+  } catch(e) {}
+}
+
+// (função salvarDados removida — duplicata da linha 4523)
+
+function atualizarStreakDiario(ultimoAcesso) {
+  const hoje = new Date().toDateString();
+  const ontem = new Date(Date.now() - 86400000).toDateString();
+  if (ultimoAcesso === ontem) streak++;
+  else if (ultimoAcesso !== hoje) streak = 1;
+}
+
+// ================================================================
+// NAVEGAÇÃO ENTRE TELAS
+// ================================================================
+function mostrarTela(id) {
+  ['telaInicial','telaModulos','telaModulo','telaLicao'].forEach(t => {
+    const el = document.getElementById(t);
+    if (el) el.style.display = 'none';
+  });
+  document.getElementById(id).style.display = 'block';
+  window.scrollTo(0,0);
+}
+
+function voltarModulos() { renderizarModulos(); mostrarTela('telaModulos'); }
+
+function voltarModulo() {
+  frasesConcluidas = new Set();
+  renderizarLicoes(moduloAtual);
+  mostrarTela('telaModulo');
+}
+
+// ================================================================
+// TELA DE MÓDULOS
+// ================================================================
+function atualizarPainelProgresso() {
+  const totalLicoes = Object.keys(licoesConcluidas).length;
+  const totalFrases = totalLicoes * 10; // estimativa: 10 frases/lição
+  document.getElementById('statTotal').textContent = totalFrases;
+  document.getElementById('statLicoes').textContent = totalLicoes;
+  document.getElementById('statStreak').textContent = streak;
+  document.getElementById('statTaxa').textContent = totalLicoes > 0 ? '85%' : '0%';
+}
+
+function renderizarModulos() {
+  const grid = document.getElementById('gridModulos');
+  grid.innerHTML = '';
+  MODULOS.filter(m => m.idioma === idiomaAtual).forEach(m => {
+    const totalLicoes = m.licoes.length;
+    const concluidas = m.licoes.filter((_, i) => licoesConcluidas[`${m.id}_${i}`]).length;
+    const pct = totalLicoes > 0 ? Math.round(concluidas/totalLicoes*100) : 0;
+    const bloqueado = !m.desbloqueado;
+    const card = document.createElement('div');
+    card.className = 'card-modulo' + (bloqueado ? ' modulo-locked' : '');
+    card.style.borderColor = pct > 0 ? m.cor : 'transparent';
+    card.innerHTML = `
+      <div class="modulo-badge" style="background:${m.cor}">${m.emoji}</div>
+      <div class="modulo-nome">${m.nome}</div>
+      <div class="modulo-desc">${m.desc}</div>
+      <div class="modulo-prog" style="color:${m.cor}">${concluidas}/${totalLicoes} lições</div>
+      <div class="prog-bar-mini"><div class="prog-bar-mini-fill" style="width:${pct}%;background:${m.cor}"></div></div>
+    `;
+    if (!bloqueado) card.onclick = () => abrirModulo(m);
+    grid.appendChild(card);
+  });
+  atualizarHeader();
+  atualizarPainelProgresso();
+}
+
+function abrirModulo(m) {
+  moduloAtual = m;
+  renderizarLicoes(m);
+  mostrarTela('telaModulo');
+}
+
+// ================================================================
+// TELA DE LIÇÕES
+// ================================================================
+function renderizarLicoes(m) {
+  const totalLicoes = m.licoes.length;
+  const concluidas = m.licoes.filter((_, i) => licoesConcluidas[`${m.id}_${i}`]).length;
+  const pct = totalLicoes > 0 ? Math.round(concluidas/totalLicoes*100) : 0;
+  document.getElementById('moduloHeader').innerHTML = `
+    <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px">
+      <div style="width:44px;height:44px;border-radius:50%;background:${m.cor};color:white;font-weight:900;font-size:1rem;display:flex;align-items:center;justify-content:center">${m.emoji}</div>
+      <div><h2 style="color:${m.cor}">${m.nome}</h2><p>${m.desc}</p></div>
+    </div>
+    <div class="progress-geral">
+      <div class="progress-label">${concluidas} de ${totalLicoes} lições concluídas · ${pct}%</div>
+      <div class="progress-track"><div class="progress-fill" style="width:${pct}%;background:${m.cor}"></div></div>
+    </div>
+  `;
+  const lista = document.getElementById('listaLicoes');
+  lista.innerHTML = '';
+  m.licoes.forEach((l, i) => {
+    const concluida = licoesConcluidas[`${m.id}_${i}`];
+    const div = document.createElement('div');
+    div.className = 'card-licao-lista' + (concluida ? ' concluida' : '');
+    div.innerHTML = `
+      <div class="licao-num ${concluida?'concluida':''}" style="background:${concluida?'var(--sucesso)':m.cor}">${i+1}</div>
+      <div class="licao-info">
+        <div class="licao-nome">${l.titulo}</div>
+        <div class="licao-meta">${l.subtitulo} · ${l.frases.length} frases</div>
+      </div>
+      <div class="licao-check">${concluida?'✅':'▶'}</div>
+    `;
+    div.onclick = () => abrirLicao(m, i);
+    lista.appendChild(div);
+  });
+}
+
+// ================================================================
+// TELA DA LIÇÃO / SHADOWING
+// ================================================================
+function abrirLicao(m, idx) {
+  moduloAtual = m;
+  licaoAtual = idx;
+  fraseIdx = 0;
+  frasesConcluidas = new Set();
+  const l = m.licoes[idx];
+  document.getElementById('licaoTitulo').textContent = l.titulo;
+  document.getElementById('licaoSub').textContent = l.subtitulo;
+  document.getElementById('licaoBadge').textContent = m.nome;
+  document.getElementById('licaoBadge').style.background = m.cor;
+  document.getElementById('backLicao').textContent = `← ${m.nome}`;
+  renderizarFrase();
+  renderizarListaFrases();
+  renderizarVocab();
+  renderizarGramatica();
+  mostrarTab('shadowing');
+  mostrarTela('telaLicao');
+}
+
+function iniciarRevisao() {
+  const chaveHistorico = idiomaAtual === 'lux' ? 'lux_historico' : 'en_historico';
+  const historico = JSON.parse(localStorage.getItem(chaveHistorico) || '{}');
+
+  const fracas = [];
+
+  // Varrer todos os módulos e lições para encontrar frases fracas
+  MODULOS.forEach(modulo => {
+    modulo.licoes.forEach((licao, licIdx) => {
+      licao.frases.forEach((frase, fraseIdx) => {
+        const chave = `${modulo.id}_${licIdx}_${fraseIdx}`;
+        const tentativas = historico[chave] || [];
+
+        if (tentativas.length === 0) {
+          // Frase nunca tentada
+          fracas.push({
+            moduloId: modulo.id,
+            modulo: modulo,
+            licIdx: licIdx,
+            fraseIdx: fraseIdx,
+            frase: frase,
+            score: null,
+            tipo: 'nunca'
+          });
+        } else {
+          // Calcular score médio
+          const scores = tentativas.map(t => t.score);
+          const media = Math.round(scores.reduce((a, b) => a + b, 0) / scores.length);
+          if (media < 70) {
+            fracas.push({
+              moduloId: modulo.id,
+              modulo: modulo,
+              licIdx: licIdx,
+              fraseIdx: fraseIdx,
+              frase: frase,
+              score: media,
+              tipo: 'fraca'
+            });
+          }
+        }
+      });
+    });
+  });
+
+  if (fracas.length === 0) {
+    mostrarToast('🎉 Parabéns! Nenhuma frase para revisar.');
+    return;
+  }
+
+  // Criar lição virtual com as frases fracas
+  const licaoVirtual = {
+    titulo: '📝 Revisão Personalizada',
+    subtitulo: `${fracas.length} frases para revisar`,
+    frases: fracas.map(f => f.frase),
+    vocabulario: [],
+    gramatica: ['Revise as frases que você ainda não domina. Concentre-se em acertar com 70% ou mais!']
+  };
+
+  const moduloVirtual = {
+    id: 'REVISAO_VIRTUAL',
+    nome: 'Revisão',
+    desc: 'Suas frases fracas',
+    cor: '#FF9800',
+    licoes: [licaoVirtual],
+    ativo: true
+  };
+
+  // Abrir a lição virtual
+  abrirLicao(moduloVirtual, 0);
+  mostrarToast('🔄 Modo Revisão iniciado!');
+}
+
+function copiarFrase() {
+  const l = moduloAtual.licoes[licaoAtual];
+  const f = l.frases[fraseIdx];
+  const texto = f.lux;
+  navigator.clipboard.writeText(texto).then(() => {
+    mostrarToast('✓ Frase copiada para a área de transferência');
+  }).catch(() => {
+    mostrarToast('❌ Não foi possível copiar');
+  });
+}
+
+function contarSilabas(texto) {
+  // Aproximação simples: contar vogais
+  const vogais = texto.match(/[aeioäöüëàéèê]/gi);
+  return vogais ? vogais.length : texto.length;
+}
+
+function calcularDificuldade(texto) {
+  const silabas = contarSilabas(texto);
+  if (silabas <= 3) return '★';
+  if (silabas <= 6) return '★★';
+  return '★★★';
+}
+
+
+function renderizarFrase() {
+  const l = moduloAtual.licoes[licaoAtual];
+  const f = l.frases[fraseIdx];
+  document.getElementById('fraseTexto').textContent = f.lux;
+  document.getElementById('fraseIPA').textContent = f.ipa;
+  document.getElementById('fraseTrad').textContent = f.pt;
+
+  // Adicionar dificuldade
+  const dificuldade = calcularDificuldade(f.lux);
+  let diffEl = document.getElementById('braseDiff');
+  if (!diffEl) {
+    diffEl = document.createElement('div');
+    diffEl.id = 'braseDiff';
+    diffEl.style.cssText = 'font-size: 0.75rem; color: #666; margin-top: 4px;';
+    document.getElementById('fraseCard').appendChild(diffEl);
+  }
+  diffEl.textContent = `${contarSilabas(f.lux)} sílabas · Dificuldade: ${dificuldade}`;
+
+  // FEATURE 2: Mostrar histórico da frase
+  let historicoEl = document.getElementById('fraseHistorico');
+  if (!historicoEl) {
+    historicoEl = document.createElement('div');
+    historicoEl.id = 'fraseHistorico';
+    historicoEl.style.cssText = 'font-size: 0.75rem; color: #666; margin-top: 4px;';
+    document.getElementById('fraseCard').appendChild(historicoEl);
+  }
+  const tentativas = obterHistoricoFrase(moduloAtual.id, licaoAtual, fraseIdx);
+  if (tentativas.length > 0) {
+    const scores = tentativas.map(t => t.score);
+    const melhor = Math.max(...scores);
+    const ultimo = scores[scores.length - 1];
+    historicoEl.textContent = `📈 Último: ${ultimo}% · Melhor: ${melhor}% · ${tentativas.length} tentativa${tentativas.length > 1 ? 's' : ''}`;
+    historicoEl.style.display = 'block';
+  } else {
+    historicoEl.style.display = 'none';
+  }
+
+  document.getElementById('fraseCard').classList.remove('tocando');
+  esconderPainelComp();
+  resetarStatusBox();
+  renderizarListaFrases();
+}
+
+function renderizarListaFrases() {
+  const l = moduloAtual.licoes[licaoAtual];
+  const cont = document.getElementById('listaFrases');
+  cont.innerHTML = '';
+  l.frases.forEach((f, i) => {
+    const div = document.createElement('div');
+    const sel = i === fraseIdx;
+    const conc = frasesConcluidas.has(i);
+    div.className = `item-frase${sel?' selecionada':''}${conc?' concluida':''}`;
+    div.innerHTML = `
+      <div class="num-frase">${conc ? '✓' : i+1}</div>
+      <div style="flex:1"><div class="lux-mini">${f.lux}</div><div class="pt-mini">${f.pt}</div></div>
+      <span style="font-size:0.8rem;color:var(--cinza)">${conc?'✅':'▶'}</span>
+    `;
+    div.onclick = () => { fraseIdx = i; renderizarFrase(); };
+    cont.appendChild(div);
+  });
+}
+
+function renderizarVocab() {
+  const l = moduloAtual.licoes[licaoAtual];
+  const tbody = document.getElementById('tabelaVocab');
+  tbody.innerHTML = '';
+  l.vocabulario.forEach(v => {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><span class="palavra-lux" onclick="falarTexto('${v.lux.replace(/'/g,"\\'")}','lb')">${v.lux}</span></td>
+      <td>${v.pt}</td>
+      <td style="font-style:italic;color:#666">${v.ipa}</td>
+      <td><button class="btn btn-sm btn-outline" onclick="falarTexto('${v.lux.replace(/'/g,"\\'")}','lb')" style="padding:3px 8px">🔊</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function renderizarGramatica() {
+  const l = moduloAtual.licoes[licaoAtual];
+  const cont = document.getElementById('notasGramatica');
+  cont.innerHTML = l.gramatica.map(g => `<div class="regra">${g}</div>`).join('');
+}
+
+// ================================================================
+// TABS
+// ================================================================
+function mostrarTab(tab) {
+  ['shadowing','vocabulario','gramatica'].forEach(t => {
+    document.getElementById(`tab-${t}`).style.display = t === tab ? 'block' : 'none';
+  });
+  document.querySelectorAll('.tab').forEach((el, i) => {
+    el.classList.toggle('ativa', ['shadowing','vocabulario','gramatica'][i] === tab);
+  });
+}
+
+// ================================================================
+// AUDIO / TTS
+// ================================================================
+function falarTexto(texto, lang) {
+  if (!window.speechSynthesis) return;
+  window.speechSynthesis.cancel();
+  const u = new SpeechSynthesisUtterance(texto);
+  u.lang = 'de-DE';
+  u.rate = parseFloat(document.getElementById('velRange')?.value || 0.8);
+  speechSynthesis.speak(u);
+}
+
+
+// (função alternarLoop removida — conflitava com toggleLoop)
+
+
+function falarFraseAtual() {
+  const l = moduloAtual.licoes[licaoAtual];
+  const f = l.frases[fraseIdx];
+  document.getElementById('fraseCard').classList.add('tocando');
+  falarTexto(f.lux, 'de-DE');
+  setTimeout(() => document.getElementById('fraseCard').classList.remove('tocando'), 2500);
+}
+
+// ================================================================
+// NAVEGAÇÃO DE FRASES
+// ================================================================
+function fraseSeguinte() {
+  const l = moduloAtual.licoes[licaoAtual];
+  if (fraseIdx < l.frases.length - 1) { fraseIdx++; renderizarFrase(); }
+  else mostrarToast('✅ Fim das frases desta lição!');
+}
+
+function fraseAnterior() {
+  if (fraseIdx > 0) { fraseIdx--; renderizarFrase(); }
+}
+
+// ================================================================
+// GRAVAÇÃO E RECONHECIMENTO DE VOZ
+// ================================================================
+function alternarGravacao() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') {
+    pararGravacao();
+  } else {
+    iniciarGravacao();
+  }
+}
+
+function toggleLoop() {
+  loopMode = !loopMode;
+  const btn = document.getElementById('btnLoop');
+  if (loopMode) {
+    btn.style.opacity = '0.5';
+    btn.style.background = 'var(--azul)';
+    btn.style.color = 'white';
+    mostrarToast('🔁 Loop Automático Ativado');
+    iniciarLoop();
+  } else {
+    btn.style.opacity = '1';
+    btn.style.background = '';
+    btn.style.color = '';
+    if (loopTimeout) clearTimeout(loopTimeout);
+    mostrarToast('Loop Desativado');
+  }
+}
+
+function iniciarLoop() {
+  if (!loopMode) return;
+  falarFraseAtual();
+  loopTimeout = setTimeout(() => {
+    if (!loopMode) return;
+    alternarGravacao();
+    loopTimeout = setTimeout(() => {
+      if (!loopMode) return;
+      pararGravacao();
+      loopTimeout = setTimeout(iniciarLoop, 2000);
+    }, 5000);
+  }, 3000);
+}
+
+async function iniciarGravacao() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    const chunks = [];
+    mediaRecorder = new MediaRecorder(stream);
+    mediaRecorder.ondataavailable = e => chunks.push(e.data);
+    mediaRecorder.onstop = () => {
+      gravacaoBlob = new Blob(chunks, { type: 'audio/webm' });
+      stream.getTracks().forEach(t => t.stop());
+      document.getElementById('btnPlayback').style.display = 'flex';
+    };
+    mediaRecorder.start();
+    document.getElementById('btnGravar').textContent = '⏹ Parar';
+    document.getElementById('btnGravar').className = 'btn btn-success';
+    setStatus('gravando', '🔴 Gravando… repita a frase em luxemburguês.');
+    iniciarWaveform();
+    iniciarReconhecimento();
+  } catch(e) {
+    mostrarToast('❌ Microfone não disponível.');
+  }
+}
+
+function pararGravacao() {
+  if (mediaRecorder && mediaRecorder.state === 'recording') mediaRecorder.stop();
+  if (recognizer) { try { recognizer.stop(); } catch(e){} }
+  pararWaveform();
+  document.getElementById('btnGravar').textContent = '🎤 Gravar voz';
+  document.getElementById('btnGravar').className = 'btn btn-danger';
+}
+
+function iniciarReconhecimento() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) { setStatus('ok', '⚠️ Reconhecimento de voz não suportado neste browser.'); return; }
+  recognizer = new SR();
+  // NOTA TÉCNICA: Não existe suporte de reconhecimento de voz nativo para luxemburguês
+  // em nenhuma API comercial (Google, Azure, Whisper). Usamos de-DE (alemão) como
+  // aproximação — as línguas são próximas, mas palavras tipicamente luxemburguesas
+  // podem não ser reconhecidas corretamente. O aviso é exibido ao usuário.
+  recognizer.lang = idiomaAtual === 'en' ? 'en-US' : 'de-DE';
+  recognizer.continuous = false;
+  recognizer.interimResults = false;
+  recognizer.onresult = e => {
+    const dito = e.results[0][0].transcript;
+    pararGravacao();
+    mostrarComparacao(dito);
+  };
+  recognizer.onerror = () => {
+    pararGravacao();
+    setStatus('ok', '⚠️ Não foi possível reconhecer. Tente novamente.');
+  };
+  recognizer.start();
+}
+
+function mostrarComparacao(dito) {
+  const l = moduloAtual.licoes[licaoAtual];
+  const frase = l.frases[fraseIdx];
+  const original = frase.lux;
+  const score = calcScore(original, dito);
+
+  // FEATURE 2: Salvar tentativa no histórico
+  salvarTentativa(moduloAtual.id, licaoAtual, fraseIdx, dito, score);
+
+  document.getElementById('compOriginal').textContent = original;
+  document.getElementById('compVoce').textContent = dito || '(não reconhecido)';
+  const cor = score >= 80 ? 'var(--sucesso)' : score >= 50 ? '#e67e22' : 'var(--vermelho)';
+  document.getElementById('scoreFill').style.width = Math.max(score, 3) + '%';
+  document.getElementById('scoreFill').style.background = cor;
+  const scoreEl = document.getElementById('scoreTxt');
+  scoreEl.textContent = score + '%';
+  scoreEl.style.color = cor;
+  document.getElementById('painelComp').classList.add('visivel');
+  if (score >= 70) { setStatus('ok', `✅ Ótimo! Semelhança: ${score}%`); ganharXP(10); }
+  else if (score >= 40) { setStatus('ok', `📊 Semelhança: ${score}%. Quase lá!`); }
+  else { setStatus('ok', `📊 Semelhança: ${score}%. Ouça e tente imitar.`); }
+}
+
+function salvarTentativa(modId, licIdx, frIdx, dito, score) {
+  try {
+    const chaveHistorico = idiomaAtual === 'lux' ? 'lux_historico' : 'en_historico';
+    const historico = JSON.parse(localStorage.getItem(chaveHistorico) || '{}');
+    const chave = `${modId}_${licIdx}_${frIdx}`;
+
+    if (!historico[chave]) {
+      historico[chave] = [];
+    }
+
+    const hoje = new Date().toISOString().split('T')[0];
+    historico[chave].push({
+      data: hoje,
+      dito: dito || '(não reconhecido)',
+      score: score
+    });
+
+    // Manter apenas últimas 10 tentativas
+    if (historico[chave].length > 10) {
+      historico[chave].shift();
+    }
+
+    localStorage.setItem(chaveHistorico, JSON.stringify(historico));
+  } catch(e) {
+    console.error('Erro ao salvar tentativa:', e);
+  }
+}
+
+function obterHistoricoFrase(modId, licIdx, frIdx) {
+  try {
+    const chaveHistorico = idiomaAtual === 'lux' ? 'lux_historico' : 'en_historico';
+    const historico = JSON.parse(localStorage.getItem(chaveHistorico) || '{}');
+    const chave = `${modId}_${licIdx}_${frIdx}`;
+    return historico[chave] || [];
+  } catch(e) {
+    return [];
+  }
+}
+
+function calcScore(a, b) {
+  if (!b || b.trim() === '') return 0;
+  const norm = s => s.toLowerCase()
+    .replace(/[äà]/g,'a').replace(/[öô]/g,'o').replace(/[üù]/g,'u')
+    .replace(/[ëé]/g,'e').replace(/[^a-z\s]/gi,'').trim();
+  const wa = norm(a).split(/\s+/).filter(Boolean);
+  const wb = norm(b).split(/\s+/).filter(Boolean);
+  if (wa.length === 0) return 0;
+  // Exact word matches
+  let acertos = 0;
+  wa.forEach(w => { if (wb.includes(w)) acertos++; });
+  // Partial matches (starts with) for short words
+  wa.forEach(w => {
+    if (!wb.includes(w)) {
+      if (wb.some(bw => bw.startsWith(w.substring(0,3)) || w.startsWith(bw.substring(0,3)))) {
+        acertos += 0.5;
+      }
+    }
+  });
+  return Math.min(100, Math.round((acertos / wa.length) * 100));
+}
+
+function reproduzirGravacao() {
+  if (!gravacaoBlob) return;
+  const url = URL.createObjectURL(gravacaoBlob);
+  const a = new Audio(url);
+  a.play();
+}
+
+function tentarNovamente() {
+  esconderPainelComp();
+  resetarStatusBox();
+  document.getElementById('btnPlayback').style.display = 'none';
+  gravacaoBlob = null;
+}
+
+function marcarConcluida() {
+  frasesConcluidas.add(fraseIdx);
+  ganharXP(5);
+  const l = moduloAtual.licoes[licaoAtual];
+  if (frasesConcluidas.size >= l.frases.length) {
+    const key = `${moduloAtual.id}_${licaoAtual}`;
+    licoesConcluidas[key] = true;
+    salvarDados();
+    verificarConquistas();
+    mostrarToast('🏆 Lição concluída! +50 XP');
+    ganharXP(50);
+    setTimeout(voltarModulo, 1500);
+  } else {
+    mostrarToast('✓ Frase marcada!');
+    fraseSeguinte();
+  }
+}
+
+// ================================================================
+// WAVEFORM VISUAL
+// ================================================================
+function iniciarWaveform() {
+  const wf = document.getElementById('waveform');
+  wf.classList.add('ativo');
+  wf.innerHTML = Array.from({length:20},()=>'<div class="wave-bar" style="height:4px"></div>').join('');
+  const bars = wf.querySelectorAll('.wave-bar');
+  function animar() {
+    bars.forEach(b => b.style.height = (4 + Math.random()*28) + 'px');
+    animFrame = requestAnimationFrame(animar);
+  }
+  animar();
+}
+
+function pararWaveform() {
+  cancelAnimationFrame(animFrame);
+  document.getElementById('waveform').classList.remove('ativo');
+}
+
+// ================================================================
+// STATUS BOX
+// ================================================================
+function setStatus(tipo, msg) {
+  const el = document.getElementById('statusBox');
+  el.className = `status-box status-${tipo}`;
+  el.innerHTML = tipo === 'gravando' ? `<div class="dot-pulso"></div><span>${msg}</span>` : `<span>${msg}</span>`;
+}
+
+function resetarStatusBox() {
+  setStatus('idle', '💡 Ouça a frase depois grave sua voz para praticar shadowing.');
+}
+
+function esconderPainelComp() {
+  document.getElementById('painelComp').classList.remove('visivel');
+}
+
+// ================================================================
+// XP E GAMIFICAÇÃO
+// ================================================================
+function ganharXP(qty) {
+  xp += qty;
+  salvarDados();
+  const nivel = Math.floor(xp / 100);
+  const pct = (xp % 100);
+  document.getElementById('xpFill').style.width = pct + '%';
+  document.getElementById('xpNum').textContent = `${xp % 100} / 100 · Nível ${nivel + 1}`;
+  atualizarHeader();
+  atualizarPainelProgresso();
+}
+
+function atualizarHeader() {
+  const nivel = Math.floor(xp / 100) + 1;
+  document.getElementById('hdrNivel').textContent = `⭐ Nível ${nivel} · ${xp} XP`;
+  document.getElementById('hdrStreak').textContent = `🔥 ${streak} dia${streak !== 1 ? 's' : ''}`;
+}
+
+// ================================================================
+// TOAST
+// ================================================================
+function mostrarToast(msg) {
+  const el = document.getElementById('toast');
+  el.textContent = msg;
+  el.classList.add('visivel');
+  setTimeout(() => el.classList.remove('visivel'), 2500);
+}
+
+// ================================================================
+// CONQUISTAS
+// ================================================================
+const CONQUISTAS = [
+  { id: 'primeira_licao', check: () => Object.keys(licoesConcluidas).length >= 1, emoji: '🎉', titulo: 'Primeira Lição!', desc: 'Completou sua primeira lição.' },
+  { id: 'cinco_licoes', check: () => Object.keys(licoesConcluidas).length >= 5, emoji: '🌟', titulo: 'Dedicado!', desc: '5 lições concluídas.' },
+  { id: 'xp100', check: () => xp >= 100, emoji: '💯', titulo: 'Centena!', desc: 'Acumulou 100 XP.' },
+  { id: 'xp500', check: () => xp >= 500, emoji: '🏆', titulo: 'Estudante Sério!', desc: 'Acumulou 500 XP.' },
+  { id: 'streak3', check: () => streak >= 3, emoji: '🔥', titulo: 'Em Chamas!', desc: '3 dias seguidos de estudo.' },
+];
+
+function verificarConquistas() {
+  CONQUISTAS.forEach(c => {
+    if (!conquistasDesbloqueadas.has(c.id) && c.check()) {
+      conquistasDesbloqueadas.add(c.id);
+      salvarDados();
+      mostrarConquista(c);
+    }
+  });
+}
+
+function mostrarConquista(c) {
+  document.getElementById('conquistaTitulo').textContent = `${c.emoji} ${c.titulo}`;
+  document.getElementById('conquistaDesc').textContent = c.desc;
+  const popup = document.getElementById('conquistaPopup');
+  popup.classList.add('visivel');
+  setTimeout(() => popup.classList.remove('visivel'), 4000);
+}
+
+// ================================================================
+// DASHBOARD
+// ================================================================
+let dashboardVisible = false;
+function toggleDashboard() {
+  dashboardVisible = !dashboardVisible;
+  document.getElementById('dashboardPanel').style.display = dashboardVisible ? 'block' : 'none';
+  document.getElementById('roleplayPanel').style.display = 'none';
+  document.getElementById('roleplayActive').style.display = 'none';
+  if (dashboardVisible) renderDashboard();
+}
+
+function renderDashboard() {
+  renderChart();
+  renderHeatmap();
+  renderModuleScores();
+}
+
+function renderChart() {
+  const chaveH = idiomaAtual === 'lux' ? 'lux_historico' : 'en_historico';
+  const hist = JSON.parse(localStorage.getItem(chaveH) || '{}');
+  const days = [];
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000);
+    const key = d.toISOString().split('T')[0];
+    let count = 0, totalScore = 0;
+    Object.values(hist).forEach(arr => {
+      arr.forEach(t => { if (t.data === key) { count++; totalScore += t.score; } });
+    });
+    days.push({ date: d, key, count, avg: count > 0 ? Math.round(totalScore/count) : 0 });
+  }
+  const maxCount = Math.max(...days.map(d => d.count), 1);
+  const bars = document.getElementById('chartBars');
+  const labels = document.getElementById('chartLabels');
+  bars.innerHTML = '';
+  labels.innerHTML = '';
+  days.forEach(d => {
+    const h = Math.max(2, (d.count / maxCount) * 100);
+    const bar = document.createElement('div');
+    bar.className = 'chart-bar';
+    bar.style.height = h + '%';
+    bar.setAttribute('data-label', `${d.count} frases · ${d.avg}%`);
+    if (d.count === 0) bar.style.background = '#e2e8f0';
+    bars.appendChild(bar);
+    const lbl = document.createElement('span');
+    lbl.textContent = d.date.getDate();
+    labels.appendChild(lbl);
+  });
+}
+
+function renderHeatmap() {
+  const chaveH = idiomaAtual === 'lux' ? 'lux_historico' : 'en_historico';
+  const hist = JSON.parse(localStorage.getItem(chaveH) || '{}');
+  const grid = document.getElementById('heatmapGrid');
+  grid.innerHTML = '';
+  for (let i = 27; i >= 0; i--) {
+    const d = new Date(Date.now() - i * 86400000);
+    const key = d.toISOString().split('T')[0];
+    let count = 0;
+    Object.values(hist).forEach(arr => {
+      arr.forEach(t => { if (t.data === key) count++; });
+    });
+    const cell = document.createElement('div');
+    cell.className = 'heat-cell';
+    if (count >= 20) cell.classList.add('l4');
+    else if (count >= 10) cell.classList.add('l3');
+    else if (count >= 5) cell.classList.add('l2');
+    else if (count >= 1) cell.classList.add('l1');
+    cell.title = `${key}: ${count} frases`;
+    grid.appendChild(cell);
+  }
+}
+
+function renderModuleScores() {
+  const chaveH = idiomaAtual === 'lux' ? 'lux_historico' : 'en_historico';
+  const hist = JSON.parse(localStorage.getItem(chaveH) || '{}');
+  const cont = document.getElementById('moduleScores');
+  cont.innerHTML = '';
+  MODULOS.filter(m => m.idioma === idiomaAtual).forEach(m => {
+    let total = 0, count = 0;
+    Object.entries(hist).forEach(([k, arr]) => {
+      if (k.startsWith(m.id + '_')) {
+        arr.forEach(t => { total += t.score; count++; });
+      }
+    });
+    const avg = count > 0 ? Math.round(total / count) : 0;
+    const color = avg >= 70 ? 'var(--sucesso)' : avg >= 40 ? '#f59e0b' : 'var(--vermelho)';
+    const ring = document.createElement('div');
+    ring.className = 'score-ring';
+    ring.style.background = `conic-gradient(${color} ${avg * 3.6}deg, #e2e8f0 0deg)`;
+    ring.innerHTML = `<span style="font-size:0.75rem">${avg > 0 ? avg + '%' : '—'}</span>`;
+    const wrap = document.createElement('div');
+    wrap.style.cssText = 'text-align:center;';
+    wrap.appendChild(ring);
+    const label = document.createElement('div');
+    label.style.cssText = 'font-size:0.7rem;font-weight:700;margin-top:4px;color:var(--cinza);';
+    label.textContent = m.id;
+    wrap.appendChild(label);
+    cont.appendChild(wrap);
+  });
+}
+
+// ================================================================
+// REPAIR MODE (Word-by-word feedback)
+// ================================================================
+function mostrarRepair(original, dito) {
+  const norm = s => s.toLowerCase().replace(/[äà]/g,'a').replace(/[öô]/g,'o').replace(/[üù]/g,'u').replace(/[ëé]/g,'e').replace(/[^a-z\s]/gi,'').trim();
+  const wordsOrig = original.split(/\s+/);
+  const wordsDito = norm(dito).split(/\s+/).filter(Boolean);
+  
+  let repairEl = document.getElementById('repairContainer');
+  if (!repairEl) {
+    repairEl = document.createElement('div');
+    repairEl.id = 'repairContainer';
+    document.getElementById('painelComp').appendChild(repairEl);
+  }
+  
+  let correctCount = 0;
+  const wordsHTML = wordsOrig.map(w => {
+    const wNorm = norm(w);
+    const found = wordsDito.some(dw => dw === wNorm || dw.startsWith(wNorm.substring(0,3)) || wNorm.startsWith(dw.substring(0,3)));
+    if (found) { correctCount++; return `<span class="repair-word correct" onclick="falarTexto('${w.replace(/'/g,"\\'")}','lb')">${w}</span>`; }
+    else { return `<span class="repair-word wrong" onclick="falarTexto('${w.replace(/'/g,"\\'")}','lb')" title="Clique para ouvir">${w}</span>`; }
+  }).join('');
+  
+  const wrongWords = wordsOrig.filter(w => {
+    const wNorm = norm(w);
+    return !wordsDito.some(dw => dw === wNorm || dw.startsWith(wNorm.substring(0,3)) || wNorm.startsWith(dw.substring(0,3)));
+  });
+  
+  repairEl.innerHTML = `
+    <div class="repair-container">
+      <div class="repair-title">🔧 Modo Repair — Análise palavra-por-palavra</div>
+      <div class="repair-words">${wordsHTML}</div>
+      <div class="repair-hint">
+        🟢 Verde = acertou · 🔴 Vermelho = errou (clique para ouvir)
+        ${wrongWords.length > 0 ? `<br>⚡ Pratique: <strong>${wrongWords.join(', ')}</strong>` : '<br>✨ Todas as palavras corretas!'}
+      </div>
+      ${wrongWords.length > 0 ? `<button class="btn btn-outline btn-sm" style="margin-top:8px" onclick="praticarPalavrasErradas()">🎯 Repetir só as erradas</button>` : ''}
+    </div>
+  `;
+}
+
+function praticarPalavrasErradas() {
+  const wrongEls = document.querySelectorAll('.repair-word.wrong');
+  let delay = 0;
+  wrongEls.forEach(el => {
+    setTimeout(() => {
+      el.style.transform = 'scale(1.2)';
+      el.style.boxShadow = '0 0 12px rgba(239,68,68,0.4)';
+      falarTexto(el.textContent, 'lb');
+      setTimeout(() => {
+        el.style.transform = '';
+        el.style.boxShadow = '';
+      }, 1500);
+    }, delay);
+    delay += 2000;
+  });
+  mostrarToast('🎯 Ouça e repita cada palavra!');
+}
+
+// ================================================================
+// ROLE-PLAY
+// ================================================================
+const ROLEPLAY_SCENARIOS = [
+  {
+    id: 'restaurant',
+    emoji: '🍽️',
+    titulo: 'Am Restaurant',
+    subtitulo: 'Pedir comida em luxemburguês',
+    cor: '#f97316',
+    dialogos: [
+      { speaker: 'npc', nome: 'Serveur', text: 'Gudde Mëtteg! Wat ka ech fir Iech doen?', pt: 'Boa tarde! O que posso fazer por si?' },
+      { speaker: 'user', options: [
+        { lux: 'Ech hätt gäre d\'Kaart, wann ech gelift.', pt: 'Gostaria do cardápio, por favor.', score: 3 },
+        { lux: 'Eng Kaffi, wann ech gelift.', pt: 'Um café, por favor.', score: 2 },
+        { lux: 'Ech wëll iessen.', pt: 'Quero comer.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Serveur', text: 'Hei ass d\'Kaart. Mir hunn haut Bouchée à la Reine als Plat du jour.', pt: 'Aqui está o cardápio. Hoje temos Bouchée à la Reine como prato do dia.' },
+      { speaker: 'user', options: [
+        { lux: 'Dat kléngt gutt! Ech huelen de Plat du jour, wann ech gelift.', pt: 'Parece ótimo! Levo o prato do dia, por favor.', score: 3 },
+        { lux: 'Wat ass Bouchée à la Reine?', pt: 'O que é Bouchée à la Reine?', score: 2 },
+        { lux: 'Ech wëll just eng Zopp.', pt: 'Quero só uma sopa.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Serveur', text: 'Wëllt Dir och eppes drénken?', pt: 'Quer também beber alguma coisa?' },
+      { speaker: 'user', options: [
+        { lux: 'Jo, ech hätt gäre e Glas Crémant, wann ech gelift.', pt: 'Sim, gostaria de um copo de Crémant, por favor.', score: 3 },
+        { lux: 'Eng Waasser, wann ech gelift.', pt: 'Uma água, por favor.', score: 2 },
+        { lux: 'Nee merci.', pt: 'Não, obrigado.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Serveur', text: 'Perfekt! Ech bréngen Iech dat direkt.', pt: 'Perfeito! Trago-lhe isso já.' }
+    ]
+  },
+  {
+    id: 'interview',
+    emoji: '💼',
+    titulo: 'Aarbechts-Interview',
+    subtitulo: 'Entrevista de emprego formal',
+    cor: '#6366f1',
+    dialogos: [
+      { speaker: 'npc', nome: 'HR Manager', text: 'Gudde Moien! Erzielt mir eppes iwwer Iech.', pt: 'Bom dia! Conte-me algo sobre si.' },
+      { speaker: 'user', options: [
+        { lux: 'Gudde Moien! Ech sinn Ingenieur mat fënnef Joer Beruffserfahrung am IT-Beräich.', pt: 'Bom dia! Sou engenheiro com 5 anos de experiência na área de TI.', score: 3 },
+        { lux: 'Ech schaffe gäre mat Computeren.', pt: 'Gosto de trabalhar com computadores.', score: 2 },
+        { lux: 'Ech sich eng Aarbecht.', pt: 'Procuro um emprego.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'HR Manager', text: 'Firwat wëllt Dir bei eis schaffen?', pt: 'Por que quer trabalhar connosco?' },
+      { speaker: 'user', options: [
+        { lux: 'Ech identifizéiere mech mat Ärer Firmenphilosophie an ech wëll zum Wuesstem bäidroen.', pt: 'Identifico-me com a filosofia da empresa e quero contribuir para o crescimento.', score: 3 },
+        { lux: 'D\'Firma ass bekannt an ech fannen d\'Projeten interessant.', pt: 'A empresa é conhecida e acho os projetos interessantes.', score: 2 },
+        { lux: 'Ech brauch eng Aarbecht.', pt: 'Preciso de um emprego.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'HR Manager', text: 'Wat sinn Är Stäerkten?', pt: 'Quais são os seus pontos fortes?' },
+      { speaker: 'user', options: [
+        { lux: 'Meng Stäerkten sinn Teamaarbecht, Organisatioun an dat Fähegkeet, ënner Drock ze schaffen.', pt: 'Os meus pontos fortes são trabalho em equipa, organização e capacidade de trabalhar sob pressão.', score: 3 },
+        { lux: 'Ech si punctuell a motivéiert.', pt: 'Sou pontual e motivado.', score: 2 },
+        { lux: 'Ech schaffe gutt.', pt: 'Trabalho bem.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'HR Manager', text: 'Merci! Mir mellen eis bei Iech.', pt: 'Obrigado! Entramos em contacto consigo.' }
+    ]
+  },
+  {
+    id: 'doctor',
+    emoji: '🏥',
+    titulo: 'Beim Dokter',
+    subtitulo: 'Consulta médica',
+    cor: '#22c55e',
+    dialogos: [
+      { speaker: 'npc', nome: 'Dokter', text: 'Gudde Moien! Wat feelt Iech?', pt: 'Bom dia! O que se passa consigo?' },
+      { speaker: 'user', options: [
+        { lux: 'Ech hu säit dräi Deeg Kappwéi an Féiwer.', pt: 'Tenho dor de cabeça e febre há 3 dias.', score: 3 },
+        { lux: 'Ech sinn krank.', pt: 'Estou doente.', score: 2 },
+        { lux: 'Mir geet et net gutt.', pt: 'Não me sinto bem.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Dokter', text: 'Hutt Dir nach aner Symptomer? Hoschten oder Hals wéi?', pt: 'Tem outros sintomas? Tosse ou dor de garganta?' },
+      { speaker: 'user', options: [
+        { lux: 'Jo, ech hunn och liichte Hoschten an de Hals deet mir wéi.', pt: 'Sim, tenho também tosse ligeira e dor de garganta.', score: 3 },
+        { lux: 'E bëssen Hoschten.', pt: 'Um pouco de tosse.', score: 2 },
+        { lux: 'Nee, just Kappwéi.', pt: 'Não, só dor de cabeça.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Dokter', text: 'Ech verschreiwen Iech Medikamenter. Huelt Iech dräimol den Dag eng Tablett.', pt: 'Vou receitar-lhe medicamentos. Tome um comprimido três vezes ao dia.' },
+      { speaker: 'user', options: [
+        { lux: 'Merci, Dokter. Muss ech eng Krankeschäin fir d\'Aarbecht hunn?', pt: 'Obrigado, doutor. Preciso de um atestado para o trabalho?', score: 3 },
+        { lux: 'Wéi laang dauert et bis ech mech besser fillen?', pt: 'Quanto tempo até me sentir melhor?', score: 2 },
+        { lux: 'Merci.', pt: 'Obrigado.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Dokter', text: 'Jo, hei ass Äre Krankeschäin. Gutt Besserung!', pt: 'Sim, aqui tem o seu atestado. As melhoras!' }
+    ]
+  },
+  {
+    id: 'shopping',
+    emoji: '🛒',
+    titulo: 'Am Buttik',
+    subtitulo: 'Compras e atendimento',
+    cor: '#a855f7',
+    dialogos: [
+      { speaker: 'npc', nome: 'Verkeefer', text: 'Gudde Moien! Kann ech Iech hëllefen?', pt: 'Bom dia! Posso ajudá-lo?' },
+      { speaker: 'user', options: [
+        { lux: 'Jo, ech sich eng warem Jackett fir de Wanter.', pt: 'Sim, procuro um casaco quente para o inverno.', score: 3 },
+        { lux: 'Ech kucken nëmmen, merci.', pt: 'Estou só a ver, obrigado.', score: 2 },
+        { lux: 'Jo.', pt: 'Sim.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Verkeefer', text: 'Mir hunn dës nei Kollektioun. Wat fir eng Gréisst braucht Dir?', pt: 'Temos esta coleção nova. Que tamanho precisa?' },
+      { speaker: 'user', options: [
+        { lux: 'Ech droen normalerweis M oder L. Kann ech dat uprobéieren?', pt: 'Normalmente uso M ou L. Posso experimentar?', score: 3 },
+        { lux: 'Medium, wann ech gelift.', pt: 'Médio, por favor.', score: 2 },
+        { lux: 'Ech weess net.', pt: 'Não sei.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Verkeefer', text: 'Natierlech! D\'Umkleedkabinn ass hannenaus. Et kascht 89 Euro.', pt: 'Claro! O provador é lá atrás. Custa 89 euros.' },
+      { speaker: 'user', options: [
+        { lux: 'Et passt perfekt! Kann ech mat Kaart bezuelen?', pt: 'Serve perfeitamente! Posso pagar com cartão?', score: 3 },
+        { lux: 'Dat ass ze deier. Hutt Dir eppes méi bëlleg?', pt: 'É muito caro. Tem algo mais barato?', score: 2 },
+        { lux: 'Ech huelen et.', pt: 'Levo.', score: 1 }
+      ]},
+      { speaker: 'npc', nome: 'Verkeefer', text: 'Natierlech! Merci a schéinen Dag nach!', pt: 'Claro! Obrigado e bom dia!' }
+    ]
+  }
+];
+
+let rpState = { scenario: null, step: 0, totalScore: 0, maxScore: 0, history: [] };
+
+function abrirRolePlay() {
+  document.getElementById('dashboardPanel').style.display = 'none';
+  document.getElementById('roleplayPanel').style.display = 'block';
+  document.getElementById('roleplayActive').style.display = 'none';
+  document.getElementById('gridModulos').style.display = 'none';
+  renderRolePlayList();
+}
+
+function fecharRolePlay() {
+  document.getElementById('roleplayPanel').style.display = 'none';
+  document.getElementById('roleplayActive').style.display = 'none';
+  document.getElementById('gridModulos').style.display = '';
+}
+
+function renderRolePlayList() {
+  const cont = document.getElementById('roleplayScenarios');
+  cont.innerHTML = '';
+  ROLEPLAY_SCENARIOS.forEach(s => {
+    const card = document.createElement('div');
+    card.className = 'card-modulo';
+    card.style.borderColor = s.cor;
+    card.innerHTML = `
+      <div class="modulo-badge" style="background:${s.cor}">${s.emoji}</div>
+      <div class="modulo-nome">${s.titulo}</div>
+      <div class="modulo-desc">${s.subtitulo}</div>
+    `;
+    card.onclick = () => iniciarRolePlay(s);
+    cont.appendChild(card);
+  });
+}
+
+function iniciarRolePlay(scenario) {
+  rpState = { scenario, step: 0, totalScore: 0, maxScore: 0, history: [] };
+  document.getElementById('roleplayPanel').style.display = 'none';
+  document.getElementById('roleplayActive').style.display = 'block';
+  document.getElementById('rpTitle').textContent = `${scenario.emoji} ${scenario.titulo}`;
+  document.getElementById('rpScore').style.display = 'none';
+  renderRolePlayStep();
+}
+
+function renderRolePlayStep() {
+  const s = rpState.scenario;
+  const dialogue = document.getElementById('rpDialogue');
+  const options = document.getElementById('rpOptions');
+  
+  // Render all dialogue up to current step
+  dialogue.innerHTML = '';
+  rpState.history.forEach(h => {
+    const bubble = document.createElement('div');
+    bubble.className = `roleplay-bubble ${h.speaker}`;
+    if (h.speaker === 'npc') {
+      bubble.innerHTML = `<div class="npc-text">${h.text}</div><div class="npc-trad">${h.pt}</div>`;
+    } else {
+      bubble.innerHTML = `<div class="npc-text">${h.text}</div><div class="npc-trad">${h.pt}</div>`;
+    }
+    dialogue.appendChild(bubble);
+  });
+  
+  // Current step
+  if (rpState.step >= s.dialogos.length) {
+    // End of scenario
+    options.innerHTML = '';
+    const pct = rpState.maxScore > 0 ? Math.round((rpState.totalScore / rpState.maxScore) * 100) : 0;
+    const emoji = pct >= 80 ? '🏆' : pct >= 50 ? '👍' : '💪';
+    document.getElementById('rpScore').style.display = 'block';
+    document.getElementById('rpScore').innerHTML = `
+      <div class="roleplay-score">
+        <div class="big-emoji">${emoji}</div>
+        <div class="score-text">${pct}%</div>
+        <p style="color:var(--cinza);margin-top:8px;">Score do Role-Play</p>
+        <p style="font-size:0.85rem;color:var(--cinza);margin-top:4px;">${rpState.totalScore} / ${rpState.maxScore} pontos</p>
+        <button class="btn btn-primary" style="margin:16px auto 0;" onclick="fecharRolePlay()">✓ Voltar aos Cenários</button>
+      </div>
+    `;
+    ganharXP(Math.round(pct / 5));
+    return;
+  }
+  
+  const step = s.dialogos[rpState.step];
+  
+  if (step.speaker === 'npc') {
+    rpState.history.push({ speaker: 'npc', text: step.text, pt: step.pt });
+    const bubble = document.createElement('div');
+    bubble.className = 'roleplay-bubble npc';
+    bubble.innerHTML = `
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <div class="roleplay-avatar" style="background:${s.cor};width:28px;height:28px;font-size:0.9rem;">${s.emoji}</div>
+        <span style="font-weight:700;font-size:0.82rem;">${step.nome}</span>
+      </div>
+      <div class="npc-text">${step.text}</div>
+      <div class="npc-trad">${step.pt}</div>
+    `;
+    bubble.style.cursor = 'pointer';
+    bubble.onclick = () => falarTexto(step.text, 'lb');
+    dialogue.appendChild(bubble);
+    falarTexto(step.text, 'lb');
+    rpState.step++;
+    setTimeout(renderRolePlayStep, 500);
+    return;
+  }
+  
+  // User choice
+  options.innerHTML = '';
+  step.options.forEach((opt, i) => {
+    const btn = document.createElement('div');
+    btn.className = 'roleplay-option';
+    btn.innerHTML = `<div class="opt-lux">${opt.lux}</div><div class="opt-pt">${opt.pt}</div>`;
+    btn.onclick = () => {
+      rpState.totalScore += opt.score;
+      rpState.maxScore += 3;
+      rpState.history.push({ speaker: 'user', text: opt.lux, pt: opt.pt });
+      falarTexto(opt.lux, 'lb');
+      if (opt.score === 3) mostrarToast('🌟 Excelente escolha!');
+      else if (opt.score === 2) mostrarToast('👍 Boa resposta!');
+      else mostrarToast('💡 Pode melhorar!');
+      rpState.step++;
+      setTimeout(renderRolePlayStep, 600);
+    };
+    options.appendChild(btn);
+  });
+  
+  dialogue.scrollTop = dialogue.scrollHeight;
+}
+
+// ================================================================
+// AI CHAT
+// ================================================================
+let chatOpen = false;
+let chatHistory = [];
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const panel = document.getElementById('chatPanel');
+  const fab = document.getElementById('chatFab');
+  panel.classList.toggle('visible', chatOpen);
+  fab.textContent = chatOpen ? '✕' : '💬';
+  if (chatOpen && chatHistory.length === 0) iniciarChat();
+}
+
+function iniciarChat() {
+  const msgs = document.getElementById('chatMessages');
+  msgs.innerHTML = '';
+  addBotMsg('Moien! 👋', 'Olá! Sou seu assistente de luxemburguês.');
+  setTimeout(() => {
+    addBotMsg('Wéi kann ech Iech hëllefen?', 'Como posso ajudá-lo?');
+    addTopics();
+  }, 800);
+}
+
+function addBotMsg(lux, pt, extra) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg bot';
+  let html = `<div class="msg-lux">${lux}</div>`;
+  if (pt) html += `<div class="msg-pt">${pt}</div>`;
+  if (extra) html += extra;
+  div.innerHTML = html;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  chatHistory.push({role:'bot', lux, pt});
+}
+
+function addUserMsg(text) {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg user';
+  div.innerHTML = `<div class="msg-lux">${text}</div>`;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+  chatHistory.push({role:'user', text});
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-typing';
+  div.id = 'typingIndicator';
+  div.innerHTML = '<span></span><span></span><span></span>';
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function hideTyping() {
+  const el = document.getElementById('typingIndicator');
+  if (el) el.remove();
+}
+
+function addTopics() {
+  const msgs = document.getElementById('chatMessages');
+  const div = document.createElement('div');
+  div.className = 'chat-msg bot';
+  div.innerHTML = `
+    <div class="msg-pt">Escolha um tema ou escreva em LUX/PT:</div>
+    <div class="chat-topics">
+      <div class="chat-topic" onclick="topicClick('saudações')">👋 Saudações</div>
+      <div class="chat-topic" onclick="topicClick('gramática')">📝 Gramática</div>
+      <div class="chat-topic" onclick="topicClick('vocabulário')">📚 Vocabulário</div>
+      <div class="chat-topic" onclick="topicClick('cultura')">🇱🇺 Cultura</div>
+      <div class="chat-topic" onclick="topicClick('restaurante')">🍽️ Restaurante</div>
+      <div class="chat-topic" onclick="topicClick('trabalho')">💼 Trabalho</div>
+      <div class="chat-topic" onclick="topicClick('números')">🔢 Números</div>
+      <div class="chat-topic" onclick="topicClick('verbos')">✍️ Verbos</div>
+    </div>
+  `;
+  msgs.appendChild(div);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function topicClick(topic) {
+  addUserMsg(topic);
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    respondToTopic(topic);
+  }, 600 + Math.random() * 400);
+}
+
+function enviarChat() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text) return;
+  input.value = '';
+  addUserMsg(text);
+  showTyping();
+  setTimeout(() => {
+    hideTyping();
+    processUserInput(text);
+  }, 700 + Math.random() * 500);
+}
+
+const CHAT_KB = {
+  greetings: [
+    { q: /moien|hello|olá|oi|bom dia/i, lux: 'Moien! Wéi geet et Iech?', pt: 'Olá! Como está?' },
+    { q: /gudde moien/i, lux: 'Gudde Moien! Schéin Iech ze gesinn!', pt: 'Bom dia! Prazer em vê-lo!' },
+    { q: /gudden owend/i, lux: 'Gudden Owend! Alles gutt?', pt: 'Boa noite! Tudo bem?' },
+    { q: /äddi|tchau|bye|adeus/i, lux: 'Äddi! Bis déi nächst Kéier!', pt: 'Tchau! Até a próxima!' },
+    { q: /merci|obrigad/i, lux: 'Gären geschitt! (De nada!)', pt: 'Com prazer! (De nada!)' },
+    { q: /wéi geet|como (vai|está)/i, lux: 'Mir geet et gutt, merci! An Iech?', pt: 'Estou bem, obrigado! E você?' },
+  ],
+  grammar: [
+    { q: /verbo|verb|konjug/i, lux: 'D\'wichtegst Verben op Lëtzebuergesch:', pt: 'Os verbos mais importantes em luxemburguês:', extra: '<div class="msg-vocab" onclick="falarTexto(\'sinn\',\'lb\')">\'sinn\' (ser)</div> <div class="msg-vocab" onclick="falarTexto(\'hunn\',\'lb\')">\'hunn\' (ter)</div> <div class="msg-vocab" onclick="falarTexto(\'goen\',\'lb\')">\'goen\' (ir)</div> <div class="msg-vocab" onclick="falarTexto(\'maachen\',\'lb\')">\'maachen\' (fazer)</div><br><div class="msg-pt">Conjugação de \'sinn\': Ech sinn, Du bass, Hien/Si ass, Mir sinn, Dir sidd, Si sinn</div>' },
+    { q: /artigo|artikel|der|die|das/i, lux: 'Op Lëtzebuergesch ginn et 3 Artikelen:', pt: 'Em luxemburguês existem 3 artigos:', extra: '<div class="msg-vocab">den (masc.)</div> <div class="msg-vocab">d\' (fem.)</div> <div class="msg-vocab">d\' (neutro/plural)</div><br><div class="msg-pt">Ex: <strong>de</strong> Mann, <strong>d\'</strong>Fra, <strong>d\'</strong>Kanner</div>' },
+    { q: /plural|mehrzuel/i, lux: 'De Plural op Lëtzebuergesch:', pt: 'O plural em luxemburguês:', extra: '<div class="msg-pt">Regras comuns:<br>• +en: Buch → Bicher<br>• +er: Kand → Kanner<br>• Umlaut: Mann → Männer<br>• Sem mudança: Meedchen → Meedchen</div>' },
+    { q: /negat|net|nit/i, lux: 'D\'Negatioun op Lëtzebuergesch:', pt: 'A negação em luxemburguês:', extra: '<div class="msg-pt">Use <strong>net</strong> após o verbo:<br>• Ech sinn <strong>net</strong> midd (Não estou cansado)<br>• Ech hunn <strong>keng</strong> Zäit (Não tenho tempo)<br>• Ech verstinn dat <strong>net</strong> (Não entendo isso)</div>' },
+  ],
+  vocab: [
+    { q: /família|famil/i, lux: 'D\'Famill:', pt: 'A família:', extra: '<div class="msg-vocab" onclick="falarTexto(\'Mamm\',\'lb\')\">\'Mamm\' (mãe)</div> <div class="msg-vocab" onclick="falarTexto(\'Papp\',\'lb\')\">\'Papp\' (pai)</div> <div class="msg-vocab" onclick="falarTexto(\'Brudder\',\'lb\')\">\'Brudder\' (irmão)</div> <div class="msg-vocab" onclick="falarTexto(\'Schwëster\',\'lb\')\">\'Schwëster\' (irmã)</div>' },
+    { q: /comida|iessen|essen|restaur/i, lux: 'Am Restaurant:', pt: 'No restaurante:', extra: '<div class="msg-vocab">\'d\'Kaart\' (cardápio)</div> <div class="msg-vocab">\'d\'Rechnung\' (conta)</div> <div class="msg-vocab">\'de Plat du jour\' (prato do dia)</div> <div class="msg-vocab">\'eng Kaffi\' (um café)</div>' },
+    { q: /cor|faarf|farbe/i, lux: 'D\'Faarwen:', pt: 'As cores:', extra: '<div class="msg-vocab">rout (vermelho)</div> <div class="msg-vocab">blo (azul)</div> <div class="msg-vocab">gréng (verde)</div> <div class="msg-vocab">giel (amarelo)</div> <div class="msg-vocab">wäiss (branco)</div> <div class="msg-vocab">schwaarz (preto)</div>' },
+    { q: /dia|dag|semana|woch/i, lux: 'D\'Deeg vun der Woch:', pt: 'Os dias da semana:', extra: '<div class="msg-vocab">Méindeg (segunda)</div> <div class="msg-vocab">Dënschdeg (terça)</div> <div class="msg-vocab">Mëttwoch (quarta)</div> <div class="msg-vocab">Donneschdeg (quinta)</div> <div class="msg-vocab">Freideg (sexta)</div> <div class="msg-vocab">Samschdeg (sábado)</div> <div class="msg-vocab">Sonndeg (domingo)</div>' },
+    { q: /númer|zuel|contar|contag/i, lux: 'D\'Zuelen:', pt: 'Os números:', extra: '<div class="msg-pt">1=eent, 2=zwee, 3=dräi, 4=véier, 5=fënnef<br>6=sechs, 7=siwen, 8=aacht, 9=néng, 10=zéng<br>20=zwanzeg, 100=honnert, 1000=dausend</div>' },
+  ],
+  culture: [
+    { q: /luxemburgo|land|país|lëtze/i, lux: 'Lëtzebuerg ass e klengt Land an Europa.', pt: 'Luxemburgo é um pequeno país na Europa.', extra: '<div class="msg-pt">📍 Capital: Lëtzebuerg-Stad<br>👥 Population: ~660.000<br>🗣️ 3 idiomas oficiais: Lëtzebuergesch, Français, Deutsch<br>💶 Membro da UE e zona Euro<br>🏰 Patrimônio UNESCO: centro histórico</div>' },
+    { q: /idioma|sprooch|língua/i, lux: 'Lëtzebuerg huet 3 offiziell Sproochen.', pt: 'Luxemburgo tem 3 línguas oficiais.', extra: '<div class="msg-pt">1. 🇱🇺 <strong>Lëtzebuergesch</strong> — língua nacional<br>2. 🇫🇷 <strong>Français</strong> — legislação e admin<br>3. 🇩🇪 <strong>Deutsch</strong> — imprensa e educação<br><br>Muitos luxemburgueses falam 4-5 idiomas!</div>' },
+    { q: /tradição|comida|gastronomia|receita/i, lux: 'D\'Lëtzebuerger Küch ass räich!', pt: 'A culinária luxemburguesa é rica!', extra: '<div class="msg-pt">🥘 <strong>Judd mat Gaardebounen</strong> — carne de porco fumada com favas<br>🧀 <strong>Kachkéis</strong> — queijo cozido típico<br>🍰 <strong>Quetschentaart</strong> — tarte de ameixas<br>🍷 <strong>Crémant</strong> — espumante da região do Mosela</div>' },
+    { q: /feriado|feier|bank/i, lux: 'Lëtzebuerger Feierdeeg:', pt: 'Feriados luxemburgueses:', extra: '<div class="msg-pt">🎉 <strong>Nationalfeierdag</strong> — 23 de junho<br>🕯️ <strong>Liichtmëssdag</strong> — 2 de fevereiro<br>🎵 <strong>Schueberfouer</strong> — feira popular (agosto-setembro)<br>🏰 <strong>Burgbrennen</strong> — quaresma (queima de castelos)</div>' },
+  ],
+  situations: [
+    { q: /trabalho|aarbecht|emprego|job/i, lux: 'Op der Aarbecht:', pt: 'No trabalho:', extra: '<div class="msg-pt">Frases úteis:<br>• <strong>Ech schaffen als...</strong> (Eu trabalho como...)<br>• <strong>Meng Aarbechtsplaaz ass...</strong> (Meu local de trabalho é...)<br>• <strong>Ech hu Congé</strong> (Estou de férias)<br>• <strong>D\'Reunioun ass um...</strong> (A reunião é às...)</div>' },
+    { q: /médico|dokter|doença|krank/i, lux: 'Beim Dokter:', pt: 'No médico:', extra: '<div class="msg-pt">• <strong>Ech sinn krank</strong> (Estou doente)<br>• <strong>Ech hu Kappwéi</strong> (Tenho dor de cabeça)<br>• <strong>Ech brauch en Dokter</strong> (Preciso de um médico)<br>• <strong>Wou ass d\'Apthéik?</strong> (Onde é a farmácia?)</div>' },
+    { q: /compra|shop|buttik|loja/i, lux: 'Am Buttik:', pt: 'Na loja:', extra: '<div class="msg-pt">• <strong>Wéi vill kascht dat?</strong> (Quanto custa?)<br>• <strong>Kann ech mat Kaart bezuelen?</strong> (Posso pagar com cartão?)<br>• <strong>Hutt Dir dat méi kleng/grouss?</strong> (Tem menor/maior?)<br>• <strong>Ech kucken nëmmen</strong> (Estou só a ver)</div>' },
+    { q: /transport|bus|zuch|tram/i, lux: 'Den Transport zu Lëtzebuerg:', pt: 'O transporte em Luxemburgo:', extra: '<div class="msg-pt">🚌 Transporte público é <strong>100% GRATUITO</strong> desde 2020!<br>🚂 <strong>CFL</strong> — rede ferroviária<br>🚃 <strong>Tram</strong> — em Kirchberg<br>• <strong>Wéini kënnt de Bus?</strong> (Quando vem o autocarro?)</div>' },
+  ]
+};
+
+function processUserInput(text) {
+  const lower = text.toLowerCase();
+  // Search through all knowledge base categories
+  for (const cat of Object.values(CHAT_KB)) {
+    for (const item of cat) {
+      if (item.q.test(lower)) {
+        addBotMsg(item.lux, item.pt, item.extra || '');
+        return;
+      }
+    }
+  }
+  // Translation request
+  if (/como (se )?diz|wéi seet|traduz|translate/i.test(lower)) {
+    addBotMsg('Schreift d\'Wuert op Portugisesch oder Lëtzebuergesch.', 'Escreva a palavra em português ou luxemburguês e eu tento ajudar!');
+    return;
+  }
+  // If user writes in Luxembourgish, respond in LUX
+  if (/ech|mir|dir|iech|wann|hunn|sinn|geet|kënnt/i.test(lower)) {
+    const responses = [
+      { lux: 'Gutt! Dir schwätzt schonn gutt Lëtzebuergesch!', pt: 'Bom! Você já fala bem luxemburguês!' },
+      { lux: 'Dat ass richteg! Weider sou!', pt: 'Isso está correto! Continue assim!' },
+      { lux: 'Super! Versicht mol méi laang Sätz ze bilden.', pt: 'Ótimo! Tente formar frases mais longas.' },
+    ];
+    const r = responses[Math.floor(Math.random() * responses.length)];
+    addBotMsg(r.lux, r.pt);
+    return;
+  }
+  // Default fallback with topic suggestions
+  addBotMsg('Ech hunn dat net richteg verstanen.', 'Não entendi bem. Tente perguntar sobre:');
+  addTopics();
+}
+
+function respondToTopic(topic) {
+  const t = topic.toLowerCase();
+  if (t.includes('saudaç') || t.includes('grüss')) {
+    addBotMsg('Wichteg Begréissungen:', 'Saudações importantes:',
+      '<div class="msg-vocab" onclick="falarTexto(\'Moien\',\'lb\')">Moien (Olá)</div> ' +
+      '<div class="msg-vocab" onclick="falarTexto(\'Gudde Moien\',\'lb\')">Gudde Moien (Bom dia)</div> ' +
+      '<div class="msg-vocab" onclick="falarTexto(\'Gudden Owend\',\'lb\')">Gudden Owend (Boa noite)</div> ' +
+      '<div class="msg-vocab" onclick="falarTexto(\'Äddi\',\'lb\')">Äddi (Tchau)</div> ' +
+      '<div class="msg-vocab" onclick="falarTexto(\'Wéi geet et\',\'lb\')">Wéi geet et? (Como vai?)</div> ' +
+      '<div class="msg-vocab" onclick="falarTexto(\'Merci\',\'lb\')">Merci (Obrigado)</div>');
+  } else if (t.includes('gramát') || t.includes('grammar')) {
+    processUserInput('verbos conjugação');
+  } else if (t.includes('vocabul')) {
+    addBotMsg('Wéi eng Thema interesséiert Iech?', 'Qual tema te interessa?',
+      '<div class="chat-topics">' +
+      '<div class="chat-topic" onclick="topicClick(\'família\')">👨‍👩‍👧 Família</div>' +
+      '<div class="chat-topic" onclick="topicClick(\'cores\')">🎨 Cores</div>' +
+      '<div class="chat-topic" onclick="topicClick(\'dias da semana\')">📅 Dias</div>' +
+      '<div class="chat-topic" onclick="topicClick(\'números\')">🔢 Números</div>' +
+      '</div>');
+  } else if (t.includes('cultur')) {
+    processUserInput('luxemburgo país');
+  } else if (t.includes('restaur')) {
+    processUserInput('comida restaurante');
+  } else if (t.includes('trabalh')) {
+    processUserInput('trabalho emprego');
+  } else if (t.includes('númer') || t.includes('number')) {
+    processUserInput('números contar');
+  } else if (t.includes('verbo')) {
+    processUserInput('verbos conjugação');
+  } else if (t.includes('famíl')) {
+    processUserInput('família');
+  } else if (t.includes('cor')) {
+    processUserInput('cores');
+  } else if (t.includes('dia')) {
+    processUserInput('dias semana');
+  } else {
+    processUserInput(topic);
+  }
+}
+
+// ================================================================
+// PATCH: Add Repair to comparison
+// ================================================================
+const _originalMostrarComparacao = mostrarComparacao;
+mostrarComparacao = function(dito) {
+  _originalMostrarComparacao(dito);
+  const l = moduloAtual.licoes[licaoAtual];
+  const frase = l.frases[fraseIdx];
+  mostrarRepair(frase.lux, dito || '');
+};
+
+// ================================================================
+// INIT
+// ================================================================
+carregarDados();
+renderizarModulos();
+mostrarTela('telaInicial');
+
+// Registrar Service Worker (PWA)
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('sw.js').catch(() => {});
+}
+</script>
+</body>
+</html>
+
+
